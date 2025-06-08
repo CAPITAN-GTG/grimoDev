@@ -1,27 +1,27 @@
-import Image from 'next/image';
+import Link from 'next/link';
+import { Mail, Phone, MapPin, ExternalLink } from 'lucide-react';
 
 const Footer = () => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="bg-stone-900 text-amber-100 py-8">
-      <div className="container mx-auto px-4 text-center">
-        <div className="flex flex-col items-center space-y-4">
-          <Image
-            src="/logo.jpeg"
-            alt="Grimo Dev Logo"
-            width={64}
-            height={64}
-            className="rounded-full"
-            priority
-          />
-          <div className="text-xl">Grimo Dev</div>
-          <div className="flex items-center justify-center space-x-2">
+    <footer className="bg-gray-900 text-white">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="text-center">
+          {/* Logo */}
+          <div className="flex items-center justify-center space-x-4 mb-6">
+            <div className="w-10 h-10 bg-white flex items-center justify-center">
+              <span className="text-black font-black text-lg font-inter">G</span>
+            </div>
+            <h3 className="text-xl font-black font-inter text-white tracking-tight">GRIMO DEV</h3>
           </div>
-          <div className="text-amber-200/80 max-w-md mx-auto mt-4">
-            ready to help out any company in need!
+
+          {/* Copyright */}
+          <div className="border-t border-gray-800 pt-8">
+            <p className="text-gray-400 text-sm font-semibold tracking-widest uppercase">
+              © {currentYear} GRIMO DEV. ALL RIGHTS RESERVED.
+            </p>
           </div>
-        </div>
-        <div className="border-t border-amber-800 mt-8 pt-8 text-sm">
-          <p>© {new Date().getFullYear()} Grimo Dev. All rights reserved.</p>
         </div>
       </div>
     </footer>
