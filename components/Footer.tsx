@@ -10,9 +10,11 @@ const Footer = () => {
         <div className="text-center">
           {/* Logo */}
           <div className="flex items-center justify-center space-x-4 mb-6">
-            <div className="w-10 h-10 bg-white flex items-center justify-center">
-              <span className="text-black font-black text-lg font-inter">G</span>
-            </div>
+            <img 
+              src="/logo2.jpeg" 
+              alt="Grimo Dev Logo" 
+              className="w-10 h-10 rounded-full object-cover"
+            />
             <h3 className="text-xl font-black font-inter text-white tracking-tight">GRIMO DEV</h3>
           </div>
 

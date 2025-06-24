@@ -38,9 +38,11 @@ const Navbar = () => {
             className="flex items-center space-x-4 group"
           >
             <div className="relative">
-              <div className="w-8 h-8 bg-black flex items-center justify-center transform transition-transform duration-300 group-hover:scale-110">
-                <span className="text-white font-bold text-lg font-inter tracking-wider">G</span>
-              </div>
+              <img 
+                src="/logo2.jpeg" 
+                alt="Grimo Dev Logo" 
+                className="w-8 h-8 rounded-full object-cover transform transition-transform duration-300 group-hover:scale-110"
+              />
             </div>
             <div className="hidden sm:block">
               <span className={`text-xl font-bold font-inter tracking-tight transition-colors duration-300 ${

@@ -1,21 +1,13 @@
 "use client";
 
-import Link from "next/link";
 import { useState, useEffect } from "react";
-import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
+import { HeroParallax } from "@/components/ui/hero-parallax";
+import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { 
-  Phone, 
-  Mail, 
-  ArrowRight, 
-  CheckCircle, 
-  ExternalLink,
+  Phone,
   Shield,
   Zap,
-  Users,
-  Building,
-  HardHat,
-  Wine,
-  Palette
+  Users
 } from "lucide-react";
 
 interface CallButtonProps {
@@ -31,84 +23,84 @@ export default function Home() {
     setIsVisible(true);
   }, []);
 
-  const StatusTag = ({ status }: { status: 'completed' | 'in-progress' }) => (
-    <span className={`
-      inline-flex
-      items-center
-      ml-3
-      px-3
-      py-1
-      text-xs
-      font-bold
-      tracking-widest
-      uppercase
-      border
-      ${status === 'completed' 
-        ? 'bg-green-50 border-green-600 text-green-800'
-        : 'bg-yellow-50 border-yellow-600 text-yellow-800'
-      }
-      ${status === 'in-progress' ? 'animate-pulse' : ''}
-    `}>
-      {status === 'completed' ? (
-        <>
-          <CheckCircle size={12} className="mr-1" />
-          COMPLETED
-        </>
-      ) : (
-        <>
-          <div className="w-2 h-2 bg-yellow-600 mr-2 animate-pulse" />
-          IN PROGRESS
-        </>
-      )}
-    </span>
-  );
-
-  const portfolioItems = [
+  // Products for the Hero Parallax (using preview images from the public folder)
+  const products = [
     {
       title: "TGA HANDYMAN",
-      description: "Professional handyman and construction services website with comprehensive service listings and contact system",
-      features: ["Service Portfolio", "Contact Forms", "Business Licensing Display"],
-      icon: HardHat,
-      url: "https://www.handymanservicestga.com/",
-      status: 'completed' as const,
-      stack: "HTML • CSS • JavaScript"
+      link: "https://www.handymanservicestga.com/",
+      thumbnail: "/preview-tga-handyman.png",
     },
     {
       title: "PUNTAS AZULES",
-      description: "Premium tequila brand website with elegant product showcase and authentic Mexican heritage presentation",
-      features: ["Product Catalog", "Brand Storytelling", "Premium Design"],
-      icon: Wine,
-      url: "https://puntas-azules.vercel.app/",
-      status: 'in-progress' as const,
-      stack: "Next.js • Tailwind • Vercel"
+      link: "https://puntas-azules.vercel.app/",
+      thumbnail: "/preview-puntas-azules.png",
     },
     {
       title: "TGA BUILDERS",
-      description: "Professional construction company website with enterprise-grade functionality and modern corporate design",
-      features: ["Custom Project Gallery", "Service Booking System", "Responsive Design"],
-      icon: Building,
-      url: "https://www.tgabuildersinc.com/",
-      status: 'completed' as const,
-      stack: "Next.js • Tailwind • NodeMailer"
+      link: "https://www.tgabuildersinc.com/",
+      thumbnail: "/preview-tga-builders.png",
     },
     {
       title: "SENIC INTERNATIONAL",
-      description: "Premium spirits distributor platform with sophisticated branding and professional presentation",
-      features: ["Product Catalog", "Age Verification", "Distributor Portal"],
-      icon: Wine,
-      url: "https://senic-international.vercel.app/",
-      status: 'in-progress' as const,
-      stack: "Next.js • Tailwind"
+      link: "https://senic-international.vercel.app/",
+      thumbnail: "/preview-senic-internartional.png",
     },
     {
       title: "XTREME STICKERS",
-      description: "Custom sticker e-commerce platform with advanced design tools and real-time customization",
-      features: ["Custom Design Tool", "Order Management", "Real-time Preview"],
-      icon: Palette,
-      url: "https://xtreme-stickers.vercel.app/",
-      status: 'in-progress' as const,
-      stack: "Next.js • Tailwind • MongoDB • Stripe"
-    }
+      link: "https://xtreme-stickers.vercel.app/",
+      thumbnail: "/preview-xtreme-stickers.png",
+    },
+    // Duplicate some projects to fill the required 15 slots for the parallax effect
+    {
+      title: "TGA HANDYMAN",
+      link: "https://www.handymanservicestga.com/",
+      thumbnail: "/preview-tga-handyman.png",
+    },
+    {
+      title: "PUNTAS AZULES",
+      link: "https://puntas-azules.vercel.app/",
+      thumbnail: "/preview-puntas-azules.png",
+    },
+    {
+      title: "TGA BUILDERS",
+      link: "https://www.tgabuildersinc.com/",
+      thumbnail: "/preview-tga-builders.png",
+    },
+    {
+      title: "SENIC INTERNATIONAL",
+      link: "https://senic-international.vercel.app/",
+      thumbnail: "/preview-senic-internartional.png",
+    },
+    {
+      title: "XTREME STICKERS",
+      link: "https://xtreme-stickers.vercel.app/",
+      thumbnail: "/preview-xtreme-stickers.png",
+    },
+    {
+      title: "TGA HANDYMAN",
+      link: "https://www.handymanservicestga.com/",
+      thumbnail: "/preview-tga-handyman.png",
+    },
+    {
+      title: "PUNTAS AZULES",
+      link: "https://puntas-azules.vercel.app/",
+      thumbnail: "/preview-puntas-azules.png",
+    },
+    {
+      title: "TGA BUILDERS",
+      link: "https://www.tgabuildersinc.com/",
+      thumbnail: "/preview-tga-builders.png",
+    },
+    {
+      title: "SENIC INTERNATIONAL",
+      link: "https://senic-international.vercel.app/",
+      thumbnail: "/preview-senic-internartional.png",
+    },
+    {
+      title: "XTREME STICKERS",
+      link: "https://xtreme-stickers.vercel.app/",
+      thumbnail: "/preview-xtreme-stickers.png",
+    },
   ];
 
   const CallButton = ({ phoneNumber, className = "", variant = 'primary' }: CallButtonProps) => (
@@ -164,56 +156,33 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-gray-50 to-white overflow-hidden">
-        {/* Grid Pattern Background */}
-        <div className="absolute inset-0 opacity-5">
-          <div className="absolute inset-0" style={{
-            backgroundImage: `url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23000000' fill-opacity='0.4'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")`
-          }} />
-        </div>
-        
-        <div className="relative z-10 text-center px-4 max-w-7xl mx-auto py-16 sm:py-20">
-          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}>
+      {/* Hero Section (Optimized) */}
+      <section id="home" className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">
+        <HeroHighlight className="py-24 sm:py-32 md:py-40">
+          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}> 
             {/* Main Title */}
-            <div className="mb-8 sm:mb-12">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black font-inter mb-4 sm:mb-6 md:mb-8 text-gray-900 leading-none tracking-tight">
-                MODERN WEB
-                <span className="block text-gray-600">DEVELOPMENT</span>
-              </h1>
-              <div className="w-16 sm:w-24 md:w-32 h-0.5 sm:h-1 bg-black mx-auto" />
-            </div>
+            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-inter mb-6 sm:mb-8 text-center text-gray-900 leading-tight">
+              MODERN WEB <br className="hidden md:block" /> <Highlight>DEVELOPMENT</Highlight>
+            </h1>
 
             {/* Subtitle */}
-            <p className="text-sm sm:text-base md:text-xl lg:text-2xl xl:text-3xl mb-6 sm:mb-8 max-w-4xl mx-auto text-gray-700 leading-tight font-medium tracking-wide px-2">
+            <p className="text-base md:text-xl lg:text-2xl mb-8 sm:mb-12 max-w-3xl mx-auto text-gray-700 leading-snug font-medium tracking-wide px-2 text-center">
               ENTERPRISE-GRADE DIGITAL SOLUTIONS WITH PRECISION ENGINEERING
             </p>
 
-            {/* Description */}
-            <p className="text-sm sm:text-base md:text-lg text-gray-600 max-w-2xl mx-auto mb-8 sm:mb-12 md:mb-16 leading-relaxed tracking-wide px-2">
-              We deliver high-performance, scalable web applications that drive measurable business results through strategic design and advanced technology implementation.
-            </p>
-
             {/* Call to Action */}
-            <div className="flex flex-col items-center space-y-6 sm:space-y-8 md:space-y-12">
-              <h2 className="text-sm sm:text-base md:text-lg lg:text-xl text-gray-800 font-bold tracking-widest uppercase px-2 text-center">
-                REQUEST PROJECT CONSULTATION
-              </h2>
-              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-center justify-center w-full max-w-md sm:max-w-lg md:max-w-2xl mx-auto">
-                <div className="w-full sm:w-auto flex-shrink-0">
-                  <CallButton phoneNumber="(702) 218-5068" className="w-full sm:w-auto" />
-                </div>
+            <div className="flex flex-col items-center space-y-6 sm:space-y-8">
+              <div className="flex flex-col sm:flex-row gap-4 sm:gap-6 md:gap-8 items-center justify-center w-full max-w-md sm:max-w-lg mx-auto">
+                <CallButton phoneNumber="(702) 218-5068" className="w-full sm:w-auto" />
                 <span className="text-gray-400 font-bold tracking-widest text-sm flex-shrink-0">OR</span>
-                <div className="w-full sm:w-auto flex-shrink-0">
-                  <CallButton phoneNumber="(747) 400-9401" variant="secondary" className="w-full sm:w-auto" />
-                </div>
+                <CallButton phoneNumber="(747) 400-9401" variant="secondary" className="w-full sm:w-auto" />
               </div>
-              <p className="text-gray-500 max-w-md text-xs sm:text-sm tracking-wider uppercase font-semibold px-4 text-center leading-relaxed">
+              <p className="text-gray-500 max-w-md text-xs sm:text-sm tracking-wider uppercase font-semibold text-center">
                 PROFESSIONAL WEB DEVELOPMENT SERVICES WITH GUARANTEED DELIVERY
               </p>
             </div>
           </div>
-        </div>
+        </HeroHighlight>
 
         {/* Scroll Indicator */}
         <div className="absolute bottom-4 sm:bottom-8 left-1/2 transform -translate-x-1/2">
@@ -222,99 +191,9 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Portfolio Section */}
-      <section id="portfolio" className="py-24 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-20">
-            <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-bold tracking-widest mb-6">
-              <span>PORTFOLIO</span>
-            </div>
-            <h2 className="text-5xl md:text-6xl font-black font-inter text-gray-900 mb-8 tracking-tight">
-              RECENT PROJECTS
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide">
-              Discover enterprise solutions that have transformed businesses through strategic digital implementation and advanced technical architecture
-            </p>
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 items-start">
-            {portfolioItems.map((item, index) => (
-              <div key={index} className="group max-w-sm mx-auto md:max-w-none h-full">
-                <CardContainer className="inter-var h-full">
-                  <CardBody className="relative w-full h-full bg-white border-2 border-gray-200 hover:border-black transition-all duration-300 overflow-hidden flex flex-col">
-                    {/* Project Icon */}
-                    <div className="relative h-48 bg-gray-100 flex items-center justify-center group-hover:bg-gray-900 transition-colors duration-300">
-                      <CardItem translateZ="160" className="text-center">
-                        <item.icon 
-                          size={64} 
-                          className="text-gray-700 group-hover:text-white transition-colors duration-300" 
-                        />
-                      </CardItem>
-                    </div>
-
-                    {/* Content */}
-                    <div className="p-4 sm:p-6 flex flex-col flex-1 min-h-0">
-                      {/* Title and Description */}
-                      <CardItem translateZ="180" className="mb-4">
-                        <div className="flex items-start justify-between mb-3 flex-wrap gap-2">
-                          <h3 className="text-base sm:text-lg font-black font-inter text-gray-900 tracking-tight leading-tight flex-shrink-0">
-                            {item.title}
-                          </h3>
-                          <div className="flex-shrink-0">
-                            <StatusTag status={item.status} />
-                          </div>
-                        </div>
-                        <p className="text-gray-600 leading-relaxed tracking-wide text-xs sm:text-sm">
-                          {item.description}
-                        </p>
-                      </CardItem>
-
-                      {/* Features */}
-                      <CardItem translateZ="140" className="mb-4">
-                        <div className="space-y-2">
-                          {item.features.map((feature, idx) => (
-                            <div 
-                              key={idx} 
-                              className="flex items-start gap-2 text-gray-700"
-                            >
-                              <div className="w-1.5 h-1.5 bg-black flex-shrink-0 mt-1.5" />
-                              <span className="text-xs font-semibold tracking-wide leading-relaxed">{feature}</span>
-                            </div>
-                          ))}
-                        </div>
-                      </CardItem>
-
-                      {/* Tech Stack */}
-                      <CardItem translateZ="130" className="mb-6">
-                        <p className="text-xs text-gray-500 font-mono tracking-wider uppercase">
-                          {item.stack}
-                        </p>
-                      </CardItem>
-
-                      {/* Spacer to push link to bottom */}
-                      <div className="flex-1"></div>
-
-                      {/* Link - Always at bottom */}
-                      <CardItem translateZ="150" className="mt-auto pt-4">
-                        <a
-                          href={item.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="inline-flex items-center gap-2 text-black hover:text-gray-600 font-bold text-sm tracking-widest uppercase transition-colors duration-200"
-                        >
-                          <span className="whitespace-nowrap">
-                            {item.status === 'in-progress' ? 'PREVIEW SITE' : 'VIEW PROJECT'}
-                          </span>
-                          <ExternalLink size={16} className="flex-shrink-0" />
-                        </a>
-                      </CardItem>
-                    </div>
-                  </CardBody>
-                </CardContainer>
-              </div>
-            ))}
-          </div>
-        </div>
+      {/* Portfolio Section - Hero Parallax */}
+      <section id="portfolio">
+        <HeroParallax products={products} />
       </section>
 
       {/* Services/Features Section */}
@@ -349,6 +228,103 @@ export default function Home() {
                 </p>
               </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* WordPress Development Section */}
+      <section id="wordpress" className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center mb-20">
+            <div className="inline-flex items-center space-x-3 bg-blue-600 px-6 py-2 text-white text-sm font-bold tracking-widest mb-6">
+              <span>WORDPRESS DEVELOPMENT</span>
+            </div>
+            <h2 className="text-5xl md:text-6xl font-black font-inter text-gray-900 mb-8 tracking-tight">
+              WORDPRESS & ELEMENTOR
+              <span className="block text-blue-600">SPECIALISTS</span>
+            </h2>
+            <p className="text-xl text-gray-600 max-w-4xl mx-auto tracking-wide leading-relaxed">
+              Professional WordPress development services with Elementor expertise. From existing project enhancement to complete custom solutions.
+            </p>
+          </div>
+
+          {/* Technology Logos */}
+          <div className="flex items-center justify-center gap-12 mb-16">
+            <div className="group">
+              <img 
+                src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/wordpress/wordpress-original.svg"
+                alt="WordPress"
+                className="w-16 h-16 sm:w-20 sm:h-20 transition-transform duration-300 group-hover:scale-110"
+              />
+            </div>
+            <div className="w-px h-16 bg-gray-300"></div>
+            <div className="group">
+              <img 
+                src="/elementor.webp"
+                alt="Elementor"
+                className="w-16 h-16 sm:w-20 sm:h-20 transition-transform duration-300 group-hover:scale-110 rounded-lg"
+              />
+            </div>
+          </div>
+
+          {/* Services Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="group bg-white border-2 border-gray-200 hover:border-blue-600 p-8 text-center transition-all duration-300 transform hover:scale-105">
+              <div className="w-12 h-12 bg-blue-600 mx-auto mb-6 flex items-center justify-center group-hover:bg-blue-700 transition-colors duration-300 rounded-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-black font-inter text-gray-900 mb-4 tracking-tight">
+                EXISTING PROJECT ENHANCEMENT
+              </h3>
+              <p className="text-gray-600 leading-relaxed tracking-wide text-sm">
+                Jump into already existing WordPress projects. Performance optimization, feature additions, and maintenance.
+              </p>
+            </div>
+
+            <div className="group bg-white border-2 border-gray-200 hover:border-blue-600 p-8 text-center transition-all duration-300 transform hover:scale-105">
+              <div className="w-12 h-12 bg-blue-600 mx-auto mb-6 flex items-center justify-center group-hover:bg-blue-700 transition-colors duration-300 rounded-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-black font-inter text-gray-900 mb-4 tracking-tight">
+                PROJECT SETUP & ARCHITECTURE
+              </h3>
+              <p className="text-gray-600 leading-relaxed tracking-wide text-sm">
+                Complete project setup from scratch. Server configuration, theme development, and strategic planning.
+              </p>
+            </div>
+
+            <div className="group bg-white border-2 border-gray-200 hover:border-blue-600 p-8 text-center transition-all duration-300 transform hover:scale-105">
+              <div className="w-12 h-12 bg-blue-600 mx-auto mb-6 flex items-center justify-center group-hover:bg-blue-700 transition-colors duration-300 rounded-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-black font-inter text-gray-900 mb-4 tracking-tight">
+                CUSTOM PLUGINS & FEATURES
+              </h3>
+              <p className="text-gray-600 leading-relaxed tracking-wide text-sm">
+                Bespoke plugin development, custom functionality, API integrations, and advanced WordPress features.
+              </p>
+            </div>
+
+            <div className="group bg-white border-2 border-gray-200 hover:border-blue-600 p-8 text-center transition-all duration-300 transform hover:scale-105">
+              <div className="w-12 h-12 bg-blue-600 mx-auto mb-6 flex items-center justify-center group-hover:bg-blue-700 transition-colors duration-300 rounded-lg">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z" />
+                </svg>
+              </div>
+              <h3 className="text-lg font-black font-inter text-gray-900 mb-4 tracking-tight">
+                ELEMENTOR CUSTOMIZATION
+              </h3>
+              <p className="text-gray-600 leading-relaxed tracking-wide text-sm">
+                Advanced Elementor designs, custom widgets, dynamic content, and professional page building solutions.
+              </p>
+            </div>
           </div>
         </div>
       </section>
