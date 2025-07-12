@@ -192,7 +192,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-0 lg:gap-12 items-stretch">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-0 lg:gap-12 items-stretch">
             {/* Grimo Dev Managed Hosting */}
             <div className="bg-black text-white p-10 flex flex-col transition-all duration-300 hover:bg-gray-900">
               <img src="/logo2.jpeg" alt="Grimo Dev Logo" className="w-20 h-auto mb-6 mx-auto" />
