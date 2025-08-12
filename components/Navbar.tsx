@@ -19,7 +19,7 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'HOME', href: '#home' },
-    { name: 'PORTFOLIO', href: '#portfolio' },
+    { name: 'PRICING', href: '#pricing' },
     { name: 'SERVICES', href: '#services' },
     { name: 'CONTACT', href: '#contact' },
   ];
@@ -45,7 +45,7 @@ const Navbar = () => {
               />
             </div>
             <div className="hidden sm:block">
-              <span className={`text-xl font-bold font-inter tracking-tight transition-colors duration-300 ${
+              <span className={`text-xl font-bold font-jura tracking-tight transition-colors duration-300 ${
                 isScrolled ? 'text-gray-900' : 'text-white'
               }`}>
                 GRIMO DEV
@@ -73,7 +73,7 @@ const Navbar = () => {
           <div className="hidden lg:block">
             <Link
               href="#contact"
-              className="inline-flex items-center justify-center px-6 xl:px-8 py-3 bg-black text-white font-semibold text-sm tracking-widest uppercase transition-all duration-300 hover:bg-gray-800 transform hover:scale-105"
+              className="inline-flex items-center justify-center px-6 xl:px-8 py-3 bg-blue-900 text-white font-semibold text-sm tracking-widest uppercase transition-all duration-300 hover:bg-blue-800 transform hover:scale-105"
             >
               GET STARTED
             </Link>
@@ -112,7 +112,7 @@ const Navbar = () => {
                 <Link
                   href="#contact"
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full text-center py-3 bg-black text-white font-semibold text-sm tracking-widest uppercase transition-all duration-300 hover:bg-gray-800"
+                  className="block w-full text-center py-3 bg-blue-900 text-white font-semibold text-sm tracking-widest uppercase transition-all duration-300 hover:bg-blue-800"
                 >
                   GET STARTED
                 </Link>
