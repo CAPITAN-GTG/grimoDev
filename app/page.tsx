@@ -187,7 +187,7 @@ export default function Home() {
                       <p className="text-gray-300 text-xs lg:text-sm">Hosting & Maintenance</p>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg lg:text-2xl font-bold text-white mb-1">$50<span className="text-sm font-normal">/month</span></div>
+                      <div className="text-lg lg:text-2xl font-bold text-white mb-1">$50-500<span className="text-sm font-normal">/month</span></div>
                       <p className="text-gray-300 text-xs lg:text-sm">Updates & Support</p>
                     </div>
                   </div>
