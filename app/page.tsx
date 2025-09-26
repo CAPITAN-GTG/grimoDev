@@ -178,7 +178,7 @@ export default function Home() {
                 
                 <div className="bg-white/10 p-4 lg:p-6 rounded-lg mb-8 backdrop-blur-sm">
                   <div className="text-center mb-6">
-                    <div className="text-4xl lg:text-5xl font-black text-white mb-2">$500<span className="text-lg font-normal">+</span></div>
+                    <div className="text-4xl lg:text-5xl font-black text-white mb-2">$750<span className="text-lg font-normal">+</span></div>
                     <p className="text-gray-300 text-sm lg:text-base font-medium">Starting Price</p>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-4 border-t border-white/20">
@@ -187,7 +187,7 @@ export default function Home() {
                       <p className="text-gray-300 text-xs lg:text-sm">Hosting & Maintenance</p>
                     </div>
                     <div className="text-center">
-                      <div className="text-lg lg:text-2xl font-bold text-white mb-1">$50-500<span className="text-sm font-normal">/month</span></div>
+                      <div className="text-lg lg:text-2xl font-bold text-white mb-1">$75-500<span className="text-sm font-normal">/month</span></div>
                       <p className="text-gray-300 text-xs lg:text-sm">Updates & Support</p>
                     </div>
                   </div>
@@ -228,7 +228,7 @@ export default function Home() {
                 
                 <div className="bg-blue-50 p-4 lg:p-6 rounded-lg mb-8 border border-blue-200 group-hover:bg-blue-100 transition-colors duration-300">
                   <div className="text-center">
-                    <div className="text-3xl lg:text-4xl font-black text-blue-900 mb-2">$750<span className="text-lg font-normal">+</span></div>
+                    <div className="text-3xl lg:text-4xl font-black text-blue-900 mb-2">$1000<span className="text-lg font-normal">+</span></div>
                     <p className="text-gray-600 text-sm lg:text-base font-medium">Starting Price</p>
                     <p className="text-gray-500 text-xs lg:text-sm mt-2">Based on platform complexity</p>
                   </div>
