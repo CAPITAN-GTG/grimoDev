@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Clock, Trophy, ExternalLink, GitBranch } from "lucide-react";
 import {
