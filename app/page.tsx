@@ -12,6 +12,7 @@ import {
   CarouselPrevious,
   CarouselApi,
 } from "@/components/ui/carousel";
+import qrFrame from "@/public/frame.png";
 
 interface CallButtonProps {
   className?: string;
