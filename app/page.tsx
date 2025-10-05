@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
-import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Clock, Trophy } from "lucide-react";
+import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Clock, Trophy, ExternalLink } from "lucide-react";
 import {
   Carousel,
   CarouselContent,
@@ -13,6 +13,7 @@ import {
   CarouselApi,
 } from "@/components/ui/carousel";
 import qrFrame from "@/public/frame.png";
+import { projects } from "@/lib/projects";
 
 interface CallButtonProps {
   className?: string;
@@ -25,6 +26,11 @@ export default function Home() {
   const [api, setApi] = useState<CarouselApi>();
   const [current, setCurrent] = useState(0);
   const [count, setCount] = useState(0);
+  
+  // Projects carousel state
+  const [projectsApi, setProjectsApi] = useState<CarouselApi>();
+  const [projectsCurrent, setProjectsCurrent] = useState(0);
+  const [projectsCount, setProjectsCount] = useState(0);
   
 
   useEffect(() => {
@@ -44,6 +50,19 @@ export default function Home() {
     });
   }, [api]);
 
+  useEffect(() => {
+    if (!projectsApi) {
+      return;
+    }
+
+    setProjectsCount(projectsApi.scrollSnapList().length);
+    setProjectsCurrent(projectsApi.selectedScrollSnap() + 1);
+
+    projectsApi.on("select", () => {
+      setProjectsCurrent(projectsApi.selectedScrollSnap() + 1);
+    });
+  }, [projectsApi]);
+
 
 
   // Services we offer
@@ -51,6 +70,7 @@ export default function Home() {
     { icon: Code, title: "Web Development", description: "Modern, responsive websites built with cutting-edge technology" },
     { icon: Smartphone, title: "Mobile Applications", description: "Cross-platform mobile apps for iOS and Android" },
     { icon: Globe, title: "E-commerce Solutions", description: "Shopify, WordPress, and custom online stores" },
+    { icon: Star, title: "Design Improvement", description: "Transform your website with modern business standards and professional aesthetics" },
     { icon: Zap, title: "Performance Optimization", description: "Lightning-fast loading times and seamless user experience" },
     { icon: Shield, title: "Security & Maintenance", description: "Ongoing support and security updates for peace of mind" },
     { icon: Layers, title: "Custom Integrations", description: "Third-party APIs, payment systems, and automation tools" },
@@ -125,10 +145,128 @@ export default function Home() {
             </div>
           </div>
         </HeroHighlight>
-      </section>
+       </section>
 
+       {/* Our Projects Section */}
+       <section className="py-16 bg-gradient-to-r from-blue-50 to-white relative overflow-hidden">
+         <div className="absolute inset-0 gradient-mesh"></div>
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+           <div className="text-center mb-12">
+             <div className="inline-flex items-center space-x-3 bg-blue-900 px-6 py-2 text-white text-sm font-bold tracking-widest mb-6">
+               <span>OUR PROJECTS</span>
+             </div>
+             <h2 className="text-4xl md:text-6xl font-black font-jura text-gray-900 mb-6 tracking-tight">
+               RECENT WORK
+             </h2>
+             <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide leading-relaxed">
+               Explore some of our latest projects. From construction companies to e-commerce platforms, we deliver results that drive business growth.
+             </p>
+           </div>
 
-      {/* Pricing Options Section */}
+           <div className="relative">
+             <Carousel
+               opts={{
+                 align: "start",
+                 loop: true,
+               }}
+               className="w-full max-w-6xl mx-auto"
+               setApi={setProjectsApi}
+             >
+               <CarouselContent className="-ml-3 md:-ml-4">
+                 {projects.map((project, index) => (
+                   <CarouselItem key={project.id} className="pl-3 md:pl-4 pt-5 basis-4/5 sm:basis-1/2 lg:basis-1/3">
+                     <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group border border-gray-100 overflow-hidden h-full">
+                       {/* Project Header */}
+                       <div className="p-6 pb-4">
+                         <div className="flex items-start gap-4">
+                           {/* Favicon/Icon */}
+                           <div className="flex-shrink-0">
+                             <div className="w-12 h-12 rounded-lg bg-blue-100 flex items-center justify-center">
+                               <Globe className="w-6 h-6 text-blue-600" />
+                             </div>
+                           </div>
+                           
+                           {/* Project Info */}
+                           <div className="flex-1 min-w-0">
+                             <h3 className="text-xl font-bold text-gray-900 mb-2 group-hover:text-blue-900 transition-colors duration-300 font-jura">
+                               {project.name}
+                             </h3>
+                             
+                             {/* Category Badge */}
+                             <div className="mb-3">
+                               <span className="inline-flex items-center gap-1 bg-blue-100 text-blue-800 text-xs font-semibold px-2 py-1 rounded-full">
+                                 <Code className="w-3 h-3" />
+                                 {project.category}
+                               </span>
+                             </div>
+                           </div>
+                         </div>
+                       </div>
+                       
+                       {/* Project Description */}
+                       <div className="px-6 pb-4">
+                         <p className="text-gray-600 text-sm leading-relaxed">
+                           {project.description}
+                         </p>
+                       </div>
+                       
+                       {/* Card Footer */}
+                       <div className="px-6 py-4 bg-gray-50 border-t border-gray-100 mt-auto">
+                         <div className="flex items-center justify-between">
+                           <span className="text-xs text-gray-500">
+                             Project #{String(index + 1).padStart(2, '0')}
+                           </span>
+                           <a
+                             href={project.url}
+                             target="_blank"
+                             rel="noopener noreferrer"
+                             className="inline-flex items-center gap-2 bg-blue-900 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-800 transition-colors duration-300"
+                           >
+                             <ExternalLink className="w-4 h-4" />
+                             Visit Site
+                           </a>
+                         </div>
+                       </div>
+                     </div>
+                   </CarouselItem>
+                 ))}
+               </CarouselContent>
+               
+               {/* Desktop Navigation Arrows */}
+               <CarouselPrevious className="hidden lg:flex -left-16 w-12 h-12 bg-blue-900 hover:bg-blue-800 text-white border-0 shadow-lg" />
+               <CarouselNext className="hidden lg:flex -right-16 w-12 h-12 bg-blue-900 hover:bg-blue-800 text-white border-0 shadow-lg" />
+               
+               {/* Tablet Navigation Arrows */}
+               <CarouselPrevious className="hidden sm:flex lg:hidden -left-8 w-10 h-10 bg-blue-900 hover:bg-blue-800 text-white border-0 shadow-md" />
+               <CarouselNext className="hidden sm:flex lg:hidden -right-8 w-10 h-10 bg-blue-900 hover:bg-blue-800 text-white border-0 shadow-md" />
+             </Carousel>
+
+             {/* Mobile Progress Indicator */}
+             <div className="sm:hidden mt-8">
+               <div className="text-center text-sm text-gray-600 mb-3">
+                 <span className="font-medium">Projects</span> • <span className="text-blue-900 font-semibold">{projectsCurrent} of {projectsCount}</span>
+               </div>
+               <div className="flex justify-center gap-2">
+                 {Array.from({ length: projectsCount }).map((_, index) => (
+                   <div 
+                     key={index} 
+                     className={`w-3 h-3 rounded-full transition-all duration-300 ${
+                       index === projectsCurrent - 1
+                         ? 'bg-blue-900 scale-110' 
+                         : 'bg-blue-200'
+                     }`}
+                   ></div>
+                 ))}
+               </div>
+               <div className="text-center mt-3 text-xs text-gray-500">
+                 Touch and drag to navigate
+               </div>
+             </div>
+           </div>
+         </div>
+       </section>
+
+       {/* Pricing Options Section */}
       <section id="pricing" className="py-24 bg-white section-transition relative overflow-hidden">
         <div className="absolute inset-0 gradient-mesh opacity-30"></div>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
