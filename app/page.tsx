@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Clock, Trophy } from "lucide-react";
 import {
@@ -11,6 +12,7 @@ import {
   CarouselPrevious,
   CarouselApi,
 } from "@/components/ui/carousel";
+import qrFrame from "@/public/frame.png";
 
 interface CallButtonProps {
   className?: string;
@@ -93,21 +95,26 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-white">
-      {/* Hero Section (Optimized) */}
+     {/* Hero Section */}
       <section id="home" className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">
-        <HeroHighlight className="py-24 sm:py-32 md:py-40">
+        {/* QR Code */}
+        <div className="absolute top-4 left-4 z-20">
+          <Image
+            src={qrFrame}
+            alt="Share with a friend QR"
+            className="w-16 sm:w-20 md:w-24 lg:w-28"
+            priority
+          />
+        </div>
+
+        <HeroHighlight className="py-24 sm:py-32 md:py-40 z-10">
           <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}> 
-            {/* Main Title */}
             <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black font-jura mb-6 sm:mb-8 text-center text-gray-900 leading-tight">
               WEBSITES & MOBILE <br className="hidden md:block" /> <Highlight className="bg-blue-900/20 text-blue-900">APPLICATIONS</Highlight>
             </h1>
-
-            {/* Subtitle */}
             <p className="text-base md:text-xl lg:text-2xl mb-8 sm:mb-12 max-w-4xl mx-auto text-gray-700 leading-snug font-medium tracking-wide px-2 text-center">
               Professional digital solutions for businesses of all sizes. Fast delivery, flexible pricing, and premium quality that meets your business needs.
             </p>
-
-            {/* Call to Action */}
             <div className="flex flex-col items-center space-y-6 sm:space-y-8">
               <div className="flex items-center justify-center w-full max-w-md sm:max-w-lg mx-auto">
                 <CallButton className="w-full sm:w-auto" />
