@@ -103,11 +103,11 @@ export const Header = () => {
   return (
     <div className="max-w-7xl relative mx-auto py-20 md:py-40 px-4 w-full left-0 top-0">
       <div className="text-center mb-8">
-        <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-bold tracking-widest mb-6">
+        <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
           <span>PORTFOLIO</span>
         </div>
       </div>
-      <h1 className="text-4xl md:text-7xl font-black font-inter text-gray-900 mb-8 tracking-tight text-center">
+      <h1 className="text-4xl md:text-7xl font-heading text-gray-900 mb-8 tracking-tight text-center">
         RECENT PROJECTS
       </h1>
       <p className="max-w-4xl text-lg md:text-xl mt-8 text-gray-600 mx-auto text-center tracking-wide leading-relaxed">

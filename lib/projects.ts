@@ -14,6 +14,7 @@ export const projects: Project[] = [
     url: "https://www.tgabuildersinc.com/",
     description: "Professional construction company website with project galleries and contact forms",
     category: "Construction",
+    image: "/tga-builders.webp",
   },
   {
     id: "2", 
@@ -21,6 +22,7 @@ export const projects: Project[] = [
     url: "https://www.handymanservicestga.com/",
     description: "Local handyman service website featuring services, pricing, and booking system",
     category: "Home Services",
+    image: "/handyman-services.webp",
   },
   {
     id: "3",
@@ -28,6 +30,7 @@ export const projects: Project[] = [
     url: "https://yatusabesstudio.net/",
     description: "Creative studio portfolio showcasing artistic work and services",
     category: "Creative",
+    image: "/yatusabesstudio.webp",
   },
   {
     id: "4",
@@ -35,6 +38,7 @@ export const projects: Project[] = [
     url: "https://losvamos.vercel.app/",
     description: "Modern web application built with cutting-edge technology",
     category: "Web App",
+    image: "/losavamos.webp",
   },
   {
     id: "5",
@@ -42,12 +46,14 @@ export const projects: Project[] = [
     url: "https://lunarheadwear.com/",
     description: "E-commerce platform for premium headwear with shopping cart functionality",
     category: "E-commerce",
+    image: "/lunar-headwear.webp",
   },
   {
     id: "6",
-    name: "Tees To Go",
+    name: "TeestoGo",
     url: "https://www.teestogo.com/",
     description: "Custom t-shirt printing service with design tools and order management",
     category: "Printing Services",
+    image: "/teestogo.webp",
   },
 ];

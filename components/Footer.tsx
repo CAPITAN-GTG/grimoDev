@@ -15,12 +15,12 @@ const Footer = () => {
               alt="Grimo Dev Logo" 
               className="w-10 h-10 rounded-full object-cover"
             />
-            <h3 className="text-xl font-black font-jura text-white tracking-tight">GRIMO DEV</h3>
+            <h3 className="text-xl font-heading text-white tracking-tight">GRIMO DEV</h3>
           </div>
 
           {/* Copyright */}
           <div className="border-t border-gray-800 pt-8">
-            <p className="text-gray-400 text-sm font-semibold tracking-widest uppercase">
+            <p className="text-gray-400 text-sm font-normal tracking-widest uppercase">
               © {currentYear} GRIMO DEV. ALL RIGHTS RESERVED.
             </p>
           </div>

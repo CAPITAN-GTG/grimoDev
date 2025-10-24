@@ -19,7 +19,10 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'HOME', href: '#home' },
+    { name: 'PROJECTS', href: '#projects' },
+    { name: 'STANDALONE', href: '#standalone' },
     { name: 'PRICING', href: '#pricing' },
+    { name: 'FAQ', href: '#faq' },
     { name: 'SERVICES', href: '#services' },
     { name: 'CONTACT', href: '#contact' },
   ];
@@ -45,7 +48,7 @@ const Navbar = () => {
               />
             </div>
             <div className="hidden sm:block">
-              <span className={`text-xl font-bold font-jura tracking-tight transition-colors duration-300 ${
+              <span className={`text-xl font-heading tracking-tight transition-colors duration-300 ${
                 isScrolled ? 'text-gray-900' : 'text-white'
               }`}>
                 GRIMO DEV
@@ -59,7 +62,7 @@ const Navbar = () => {
               <Link
                 key={item.name}
                 href={item.href}
-                className={`font-semibold text-sm tracking-widest transition-all duration-300 relative group ${
+                className={`font-normal text-sm tracking-widest transition-all duration-300 relative group ${
                   isScrolled ? 'text-gray-600 hover:text-black' : 'text-white/90 hover:text-white'
                 }`}
               >
@@ -67,16 +70,6 @@ const Navbar = () => {
                 <span className="absolute inset-x-0 -bottom-1 h-0.5 bg-black transform scale-x-0 group-hover:scale-x-100 transition-transform duration-300" />
               </Link>
             ))}
-          </div>
-
-          {/* CTA Button */}
-          <div className="hidden lg:block">
-            <Link
-              href="#contact"
-              className="inline-flex items-center justify-center px-6 xl:px-8 py-3 bg-blue-900 text-white font-semibold text-sm tracking-widest uppercase transition-all duration-300 hover:bg-blue-800 transform hover:scale-105"
-            >
-              GET STARTED
-            </Link>
           </div>
 
           {/* Mobile Menu Button */}
@@ -103,20 +96,11 @@ const Navbar = () => {
                   key={item.name}
                   href={item.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-6 py-4 text-gray-600 hover:text-black hover:bg-gray-50 transition-colors duration-200 font-semibold text-sm tracking-widest border-b border-gray-100 last:border-b-0"
+                  className="block px-6 py-4 text-gray-600 hover:text-black hover:bg-gray-50 transition-colors duration-200 font-normal text-sm tracking-widest border-b border-gray-100 last:border-b-0"
                 >
                   {item.name}
                 </Link>
               ))}
-              <div className="px-6 pt-4 pb-2">
-                <Link
-                  href="#contact"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block w-full text-center py-3 bg-blue-900 text-white font-semibold text-sm tracking-widest uppercase transition-all duration-300 hover:bg-blue-800"
-                >
-                  GET STARTED
-                </Link>
-              </div>
             </div>
           </div>
         </div>
