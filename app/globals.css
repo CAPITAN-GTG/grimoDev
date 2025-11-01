@@ -17,10 +17,6 @@ body {
   font-weight: 400;
 }
 
-html {
-  scroll-behavior: smooth;
-}
-
 /* Custom scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
@@ -37,6 +33,18 @@ html {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #374151;
+}
+
+/* GSAP animation optimizations */
+[data-gsap-target] {
+  will-change: transform, opacity;
+}
+
+/* Smooth scroll enhancements - respects user preferences */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
 }
 
 /* Focus states */

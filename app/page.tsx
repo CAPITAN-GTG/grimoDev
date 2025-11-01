@@ -15,6 +15,13 @@ import {
 } from "@/components/ui/carousel";
 import qrFrame from "@/public/frame.png";
 import { projects } from "@/lib/projects";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+// Register ScrollTrigger plugin
+if (typeof window !== 'undefined') {
+  gsap.registerPlugin(ScrollTrigger);
+}
 
 interface CallButtonProps {
   className?: string;
@@ -43,9 +50,541 @@ export default function Home() {
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
   
+  // Refs for sections
+  const projectsSectionRef = useRef<HTMLElement>(null);
+  const clientResultsRef = useRef<HTMLElement>(null);
+  const standaloneRef = useRef<HTMLElement>(null);
+  const pricingRef = useRef<HTMLElement>(null);
+  const faqRef = useRef<HTMLElement>(null);
+  const servicesRef = useRef<HTMLElement>(null);
+  const contactRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
     setIsVisible(true);
+  }, []);
+
+  // GSAP ScrollTrigger animations
+  useEffect(() => {
+    // Ensure we're in the browser
+    if (typeof window === 'undefined') return;
+
+    // Create animation context
+    const ctx = gsap.context(() => {
+      // Helper function to create scroll animations
+      const createScrollAnimation = (ref: React.RefObject<HTMLElement | null>, delay: number = 0) => {
+        if (!ref.current) return;
+
+        const section = ref.current;
+        const heading = section.querySelector('h2');
+        const description = section.querySelector('p');
+        const cards = section.querySelectorAll('[class*="grid"] > *');
+
+        // Animate heading
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            {
+              opacity: 0,
+              y: 50,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 80%",
+                end: "top 50%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        // Animate description
+        if (description) {
+          gsap.fromTo(
+            description,
+            {
+              opacity: 0,
+              y: 30,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: delay,
+              scrollTrigger: {
+                trigger: description,
+                start: "top 80%",
+                end: "top 50%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        // Animate cards with stagger
+        if (cards.length > 0) {
+          gsap.fromTo(
+            cards,
+            {
+              opacity: 0,
+              y: 60,
+              scale: 0.95,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.8,
+              ease: "power2.out",
+              stagger: 0.15,
+              scrollTrigger: {
+                trigger: cards[0],
+                start: "top 85%",
+                end: "top 50%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      };
+
+      // Animate Projects Section
+      if (projectsSectionRef.current) {
+        const section = projectsSectionRef.current;
+        const badge = section.querySelector('[class*="inline-flex"]');
+        const heading = section.querySelector('h2');
+        const description = section.querySelector('p');
+        const carousel = section.querySelector('[role="region"]');
+
+        if (badge) {
+          gsap.fromTo(
+            badge,
+            { opacity: 0, x: -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              scrollTrigger: {
+                trigger: badge,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (description) {
+          gsap.fromTo(
+            description,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: 0.2,
+              scrollTrigger: {
+                trigger: description,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (carousel) {
+          gsap.fromTo(
+            carousel,
+            { opacity: 0, y: 60 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+              delay: 0.3,
+              scrollTrigger: {
+                trigger: carousel,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      }
+
+      // Animate Client Results Section
+      createScrollAnimation(clientResultsRef, 0.2);
+
+      // Animate Standalone Section
+      createScrollAnimation(standaloneRef, 0.2);
+
+      // Animate Pricing Section
+      if (pricingRef.current) {
+        const section = pricingRef.current;
+        const badge = section.querySelector('[class*="inline-flex"]');
+        const heading = section.querySelector('h2');
+        const description = section.querySelector('p');
+        const packages = section.querySelectorAll('[class*="grid"] > *');
+
+        if (badge) {
+          gsap.fromTo(
+            badge,
+            { opacity: 0, x: -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              scrollTrigger: {
+                trigger: badge,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (description) {
+          gsap.fromTo(
+            description,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: 0.2,
+              scrollTrigger: {
+                trigger: description,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (packages.length > 0) {
+          gsap.fromTo(
+            packages,
+            { opacity: 0, y: 80, scale: 0.9 },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.9,
+              ease: "power2.out",
+              stagger: 0.2,
+              scrollTrigger: {
+                trigger: packages[0],
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      }
+
+      // Animate FAQ Section
+      if (faqRef.current) {
+        const section = faqRef.current;
+        const badge = section.querySelector('[class*="inline-flex"]');
+        const heading = section.querySelector('h2');
+        const description = section.querySelector('p');
+        const faqItems = section.querySelectorAll('[class*="space-y"] > *');
+
+        if (badge) {
+          gsap.fromTo(
+            badge,
+            { opacity: 0, x: -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              scrollTrigger: {
+                trigger: badge,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (description) {
+          gsap.fromTo(
+            description,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: 0.2,
+              scrollTrigger: {
+                trigger: description,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (faqItems.length > 0) {
+          gsap.fromTo(
+            faqItems,
+            { opacity: 0, x: -40 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.7,
+              ease: "power2.out",
+              stagger: 0.1,
+              scrollTrigger: {
+                trigger: faqItems[0],
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      }
+
+      // Animate Services Section
+      if (servicesRef.current) {
+        const section = servicesRef.current;
+        const badge = section.querySelector('[class*="inline-flex"]');
+        const heading = section.querySelector('h2');
+        const description = section.querySelector('p');
+        const carousel = section.querySelector('[role="region"]');
+
+        if (badge) {
+          gsap.fromTo(
+            badge,
+            { opacity: 0, x: -30 },
+            {
+              opacity: 1,
+              x: 0,
+              duration: 0.6,
+              scrollTrigger: {
+                trigger: badge,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (description) {
+          gsap.fromTo(
+            description,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: 0.2,
+              scrollTrigger: {
+                trigger: description,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (carousel) {
+          gsap.fromTo(
+            carousel,
+            { opacity: 0, y: 60 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+              delay: 0.3,
+              scrollTrigger: {
+                trigger: carousel,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      }
+
+      // Animate Contact Section
+      if (contactRef.current) {
+        const section = contactRef.current;
+        const badge = section.querySelector('[class*="inline-flex"]');
+        const heading = section.querySelector('h2');
+        const description = section.querySelector('p');
+        const form = section.querySelector('form');
+
+        if (badge) {
+          gsap.fromTo(
+            badge,
+            { opacity: 0, scale: 0.8 },
+            {
+              opacity: 1,
+              scale: 1,
+              duration: 0.6,
+              ease: "back.out(1.7)",
+              scrollTrigger: {
+                trigger: badge,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (heading) {
+          gsap.fromTo(
+            heading,
+            { opacity: 0, y: 50 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power3.out",
+              scrollTrigger: {
+                trigger: heading,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (description) {
+          gsap.fromTo(
+            description,
+            { opacity: 0, y: 30 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.8,
+              ease: "power2.out",
+              delay: 0.2,
+              scrollTrigger: {
+                trigger: description,
+                start: "top 80%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+
+        if (form) {
+          gsap.fromTo(
+            form,
+            { opacity: 0, y: 60 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 1,
+              ease: "power2.out",
+              delay: 0.3,
+              scrollTrigger: {
+                trigger: form,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+              },
+            }
+          );
+        }
+      }
+    });
+
+    // Refresh ScrollTrigger on window resize
+    const handleResize = () => {
+      ScrollTrigger.refresh();
+    };
+
+    window.addEventListener('resize', handleResize);
+
+    // Cleanup function
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      ctx.revert(); // Reverts all animations when component unmounts
+      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+    };
   }, []);
 
   useEffect(() => {
@@ -367,7 +906,7 @@ export default function Home() {
        </section>
 
        {/* Our Projects Section */}
-       <section id="projects" className="py-16 bg-yellow-50">
+       <section id="projects" ref={projectsSectionRef} className="py-16 bg-yellow-50">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <div className="text-center mb-12">
              <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
@@ -479,7 +1018,7 @@ export default function Home() {
        </section>
 
        {/* Client Results Section */}
-       <section className="py-24 bg-white">
+       <section ref={clientResultsRef} className="py-24 bg-white">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <div className="text-center mb-16">
              <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
@@ -512,7 +1051,7 @@ export default function Home() {
        </section>
 
        {/* Standalone Sites Section */}
-       <section id="standalone" className="py-24 bg-gray-50">
+       <section id="standalone" ref={standaloneRef} className="py-24 bg-gray-50">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <div className="text-center mb-16">
              <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
@@ -590,7 +1129,7 @@ export default function Home() {
            </div>
          </div>
        </section>
-      <section id="pricing" className="py-24 bg-white">
+      <section id="pricing" ref={pricingRef} className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
@@ -763,7 +1302,7 @@ export default function Home() {
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" className="py-16 bg-gray-50">
+      <section id="faq" ref={faqRef} className="py-16 bg-gray-50">
         <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
@@ -814,7 +1353,7 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" className="py-24 bg-gray-50 relative overflow-hidden">
+      <section id="services" ref={servicesRef} className="py-24 bg-gray-50 relative overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <div 
@@ -916,7 +1455,7 @@ export default function Home() {
       </section>
 
       {/* Contact CTA Section */}
-      <section id="contact" className="py-24 bg-black text-white">
+      <section id="contact" ref={contactRef} className="py-24 bg-black text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <div className="max-w-4xl mx-auto">
             <div className="inline-flex items-center space-x-3 bg-yellow-100 px-6 py-2 text-black text-sm font-normal tracking-widest mb-8">
