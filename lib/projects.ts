@@ -8,7 +8,7 @@ export interface Project {
 }
 
 export const projects: Project[] = [
-  {
+  /*{
     id: "1",
     name: "TGA Builders Inc",
     url: "https://www.tgabuildersinc.com/",
@@ -23,7 +23,7 @@ export const projects: Project[] = [
     description: "Local handyman service website featuring services, pricing, and booking system",
     category: "Home Services",
     image: "/handyman-services.webp",
-  },
+  },*/
   {
     id: "3",
     name: "Yatusabe Studio",
