@@ -45,6 +45,11 @@ body {
   html {
     scroll-behavior: smooth;
   }
+  
+  /* Better scroll performance with GSAP */
+  body {
+    overflow-x: hidden;
+  }
 }
 
 /* Focus states */

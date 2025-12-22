@@ -20,7 +20,7 @@ export const HeroHighlight = ({ children, className, ...props }: HeroHighlightPr
         />
       </div>
       {/* Content */}
-      <div className="relative z-10 w-full max-w-7xl px-4">{children}</div>
+      <div className="relative z-10 w-full max-w-7xl px-4 sm:px-6 lg:px-8">{children}</div>
     </div>
   );
 };

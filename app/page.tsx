@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
-import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Calendar, Briefcase, ArrowUpRight, ExternalLink, ChevronDown, Info, ShoppingCart } from "lucide-react";
+import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Calendar, Briefcase, ArrowUpRight, ExternalLink, ChevronDown, Info, ShoppingCart, Search, MapPin, TrendingUp, Share2 } from "lucide-react";
 import toast, { Toaster } from 'react-hot-toast';
 import {
   Carousel,
@@ -13,7 +13,6 @@ import {
   CarouselPrevious,
   CarouselApi,
 } from "@/components/ui/carousel";
-import qrFrame from "@/public/frame.png";
 import { projects } from "@/lib/projects";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -30,11 +29,6 @@ interface CallButtonProps {
 
 
 export default function Home() {
-  const [isVisible, setIsVisible] = useState(false);
-  const [api, setApi] = useState<CarouselApi>();
-  const [current, setCurrent] = useState(0);
-  const [count, setCount] = useState(0);
-  
   // Projects carousel state
   const [projectsApi, setProjectsApi] = useState<CarouselApi>();
   const [projectsCurrent, setProjectsCurrent] = useState(0);
@@ -51,6 +45,10 @@ export default function Home() {
   const formRef = useRef<HTMLFormElement>(null);
   
   // Refs for sections
+  const heroRef = useRef<HTMLElement>(null);
+  const heroTitleRef = useRef<HTMLHeadingElement>(null);
+  const heroDescriptionRef = useRef<HTMLParagraphElement>(null);
+  const heroButtonRef = useRef<HTMLDivElement>(null);
   const projectsSectionRef = useRef<HTMLElement>(null);
   const clientResultsRef = useRef<HTMLElement>(null);
   const standaloneRef = useRef<HTMLElement>(null);
@@ -59,14 +57,100 @@ export default function Home() {
   const servicesRef = useRef<HTMLElement>(null);
   const contactRef = useRef<HTMLElement>(null);
 
+  // Hero animation on mount
   useEffect(() => {
-    setIsVisible(true);
+    if (typeof window === 'undefined') return;
+
+    const ctx = gsap.context(() => {
+      // Animate hero title with split text effect
+      if (heroTitleRef.current) {
+        // Create a timeline for better control
+        const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+        
+        // Set initial state
+        gsap.set(heroTitleRef.current, { opacity: 0, y: 50 });
+        
+        // Animate the title container
+        tl.to(heroTitleRef.current, {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          ease: "power3.out",
+        });
+
+        // Animate child elements (including Highlight component) with stagger
+        const titleChildren = heroTitleRef.current.querySelectorAll('*');
+        if (titleChildren.length > 0) {
+          tl.fromTo(titleChildren,
+            {
+              opacity: 0,
+              y: 30,
+              scale: 0.95,
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              duration: 0.6,
+              stagger: 0.1,
+              ease: "back.out(1.2)",
+            },
+            "-=0.8" // Start slightly before previous animation ends
+          );
+        }
+      }
+
+      // Animate hero description
+      if (heroDescriptionRef.current) {
+        gsap.fromTo(heroDescriptionRef.current,
+          {
+            opacity: 0,
+            y: 40,
+            scale: 0.98,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 1,
+            ease: "power2.out",
+            delay: 0.8,
+          }
+        );
+      }
+
+      // Animate hero button and tagline
+      if (heroButtonRef.current) {
+        const children = Array.from(heroButtonRef.current.children);
+        gsap.fromTo(children,
+          {
+            opacity: 0,
+            y: 30,
+            scale: 0.9,
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            duration: 0.8,
+            stagger: 0.15,
+            ease: "back.out(1.7)",
+            delay: 1.4,
+          }
+        );
+      }
+    });
+
+    return () => ctx.revert();
   }, []);
 
-  // GSAP ScrollTrigger animations
+  // GSAP ScrollTrigger animations with improved performance
   useEffect(() => {
     // Ensure we're in the browser
     if (typeof window === 'undefined') return;
+
+    // Refresh ScrollTrigger on load
+    ScrollTrigger.refresh();
 
     // Create animation context
     const ctx = gsap.context(() => {
@@ -412,7 +496,7 @@ export default function Home() {
         const badge = section.querySelector('[class*="inline-flex"]');
         const heading = section.querySelector('h2');
         const description = section.querySelector('p');
-        const carousel = section.querySelector('[role="region"]');
+        const serviceItems = section.querySelectorAll('[class*="grid"] > *');
 
         if (badge) {
           gsap.fromTo(
@@ -468,18 +552,19 @@ export default function Home() {
           );
         }
 
-        if (carousel) {
+        if (serviceItems.length > 0) {
           gsap.fromTo(
-            carousel,
-            { opacity: 0, y: 60 },
+            serviceItems,
+            { opacity: 0, y: 40, x: -20 },
             {
               opacity: 1,
               y: 0,
-              duration: 1,
+              x: 0,
+              duration: 0.8,
               ease: "power2.out",
-              delay: 0.3,
+              stagger: 0.1,
               scrollTrigger: {
-                trigger: carousel,
+                trigger: serviceItems[0],
                 start: "top 85%",
                 toggleActions: "play none none reverse",
               },
@@ -588,19 +673,6 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
-    if (!api) {
-      return;
-    }
-
-    setCount(api.scrollSnapList().length);
-    setCurrent(api.selectedScrollSnap() + 1);
-
-    api.on("select", () => {
-      setCurrent(api.selectedScrollSnap() + 1);
-    });
-  }, [api]);
-
-  useEffect(() => {
     if (!projectsApi) {
       return;
     }
@@ -620,54 +692,72 @@ export default function Home() {
     {
       project: "Professional Online Presence",
       metric: "Modern Website",
-      description: "Get a website that actually works for your business. Build trust with customers and stand out from the competition.",
-      icon: Globe
+      description: "Professional and modern designs that look stunning across all devices. We create responsive websites that provide an exceptional user experience on desktop, tablet, and mobile, ensuring your brand stands out with clean, contemporary aesthetics.",
+      icon: Globe,
+      image: "/modern-website.webp"
     },
     {
       project: "E-commerce Success",
       metric: "Custom Solutions",
       description: "Turn visitors into customers with smart e-commerce features. We make online selling simple and profitable.",
-      icon: ShoppingCart
+      icon: ShoppingCart,
+      image: "/e-commerce.webp"
     },
     {
       project: "Streamlined Operations",
       metric: "Booking Systems",
       description: "Stop juggling phone calls and emails. Let customers book appointments online 24/7 while you focus on growing your business.",
-      icon: Calendar
+      icon: Calendar,
+      image: "/booking.webp"
     }
   ];
 
   // Services we offer
   const services = [
-    { icon: Code, title: "Boost credibility with a custom-built website", description: "Web Development" },
-    { icon: Smartphone, title: "Reach customers anywhere with mobile apps", description: "Mobile Applications" },
-    { icon: Globe, title: "Sell more online with optimized ecommerce", description: "E-commerce Solutions" },
-    { icon: Star, title: "Stand out with professional design", description: "Design Improvement" },
-    { icon: Zap, title: "Keep customers engaged with fast performance", description: "Performance Optimization" },
-    { icon: Shield, title: "Stay secure with ongoing maintenance", description: "Security & Maintenance" },
-    { icon: Layers, title: "Streamline operations with smart integrations", description: "Custom Integrations" },
+    { icon: Code, title: "Web Development", description: "Custom websites that grow your business" },
+    { icon: Smartphone, title: "Mobile Apps", description: "Native and cross-platform applications" },
+    { icon: Search, title: "SEO Optimization", description: "Rank higher on Google and get found first" },
+    { icon: MapPin, title: "GEO Optimization", description: "Appear in local searches and nearby results" },
+    { icon: TrendingUp, title: "AIO Optimization", description: "Complete optimization across all platforms" },
+    { icon: Share2, title: "Social Media Management", description: "Grow your brand and engage customers" },
   ];
 
   const faqData = [
     {
-      question: "How long will my site take?",
-      answer: "Timeline depends on your package: Starter sites (2 weeks), Business sites (4 weeks), Pro sites (6 weeks). We always deliver on time and keep you updated throughout the process."
+      question: "How long will my site or app take?",
+      answer: "Timeline depends on your package: Standalone sites (1-2 weeks), Starter apps (2-3 weeks), Business apps (3-4 weeks), Enterprise (custom timeline). We always deliver on time."
     },
     {
       question: "What if I don't like the result?",
-      answer: "We offer unlimited revisions until you're completely satisfied. Our 50/50 payment structure means you only pay the final 50% after you approve the completed project. However, we don't give project ownership until final payment"
+      answer: "We offer unlimited revisions until you're completely satisfied. Our 50/50 payment structure means you only pay the final 50% after you approve the completed project."
     },
     {
-      question: "Can I update my site later?",
-      answer: "Absolutely! We offer monthly support plans starting at $25/month for updates, maintenance, and content changes. You can also choose a platform like WordPress, shopify, wix, etc... to update your site yourself."
+      question: "What is SEO optimization?",
+      answer: "SEO (Search Engine Optimization) helps your website rank higher on Google. We optimize your content, keywords, and technical elements so customers find you first when searching for your services."
+    },
+    {
+      question: "What is GEO optimization?",
+      answer: "GEO optimization ensures your business appears in local search results. We optimize your Google Business Profile, local citations, and location-based content to help nearby customers find you."
+    },
+    {
+      question: "What is AIO optimization?",
+      answer: "AIO (All-In-One) optimization is our comprehensive service that combines SEO, GEO, social media, and Google Business optimization. We handle everything so you can focus on your business."
+    },
+    {
+      question: "How does social media management work?",
+      answer: "We create and schedule posts, engage with your audience, and grow your following. Regular reporting shows you what's working. Perfect for businesses that want an online presence without the daily work."
+    },
+    {
+      question: "Can you help improve my Google Business listing?",
+      answer: "Yes! We optimize your Google Business Profile with accurate info, photos, posts, and reviews. This helps you appear in 'near me' searches and get more customers through your door."
     },
     {
       question: "Do you provide hosting?",
-      answer: "Yes! Our Grimo Hosting option includes secure SSL hosting, maintenance, and updates. We also work with your preferred hosting provider if you want something like WordPress, shopify, wix, etc..."
+      answer: "Yes! We offer hosting options or work with your preferred provider. We handle setup and maintenance so your site stays online and secure."
     },
     {
       question: "What's included in the 50/50 payment?",
-      answer: "A 50% deposit covers the full development of your project. The remaining 50% grants you full ownership and launches the site live. Monthly hosting keeps it online and maintained. If final payment isn’t made within 30 days, the site will be taken offline until final payment is made. Hosting must start within 30 days of final payment unless you choose to self-host."
+      answer: "50% deposit starts your project. The remaining 50% is due after you approve and before launch. This ensures you're happy with the result before final payment."
     }
   ];
 
@@ -848,12 +938,12 @@ export default function Home() {
           text-sm
           tracking-widest
           uppercase
-          transition-colors duration-300
+          transition-all duration-300 ease-in-out
           hover-lift
           focus-ring
           ${variant === 'primary' 
-            ? 'bg-black text-white hover:bg-gray-800 hover:text-yellow-200 shadow-lg hover:shadow-xl' 
-            : 'bg-white border-2 border-black text-black hover:bg-black hover:text-yellow-200'
+            ? 'bg-black text-white hover:bg-gray-800 hover:text-yellow-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]' 
+            : 'bg-white border-2 border-black text-black hover:bg-black hover:text-yellow-200 transform hover:scale-[1.02]'
           }
           ${className}
         `}
@@ -874,30 +964,29 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-white">
      {/* Hero Section */}
-      <section id="home" className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">
-        {/* QR Code */}
-        <div className="absolute top-4 left-4 z-20">
-          <Image
-            src={qrFrame}
-            alt="QR code to share Grimo Dev website with friends"
-            className="w-16 sm:w-20 md:w-24 lg:w-28"
-            priority
-          />
-        </div>
-
-        <HeroHighlight className="py-24 sm:py-32 md:py-40 z-10">
-          <div className={`transition-all duration-1000 ${isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'}`}> 
-            <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-heading mb-6 sm:mb-8 text-center text-black leading-tight">
-              WE BUILD WEBSITES AND APPS <br className="hidden md:block" /> THAT <Highlight className="bg-yellow-200 text-black">GROW YOUR BUSINESS</Highlight>
+      <section id="home" ref={heroRef} className="relative min-h-screen flex items-center justify-center bg-white overflow-hidden">
+        {/* Pattern Background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-10"
+          style={{
+            backgroundImage: 'url(/pattern.png)',
+            backgroundRepeat: 'repeat',
+            backgroundSize: 'auto',
+          }}
+        />
+        <HeroHighlight className="py-12 sm:py-16 md:py-20 lg:py-24 z-10 w-full">
+          <div> 
+            <h1 ref={heroTitleRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading mb-4 sm:mb-6 md:mb-8 text-center text-black leading-tight px-4">
+              PROFESSIONAL <Highlight className="bg-yellow-200 text-black">ONLINE PRESENCE</Highlight> <br className="hidden md:block" /> FOR YOUR BUSINESS
             </h1>
-            <p className="text-base md:text-xl lg:text-2xl mb-8 sm:mb-12 max-w-4xl mx-auto text-gray-700 leading-snug font-normal tracking-wide px-2 text-center">
-              Fast delivery, transparent pricing, and support that keeps your business online. Professional digital solutions that drive real results.
+            <p ref={heroDescriptionRef} className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 md:mb-10 lg:mb-12 max-w-4xl mx-auto text-gray-700 leading-relaxed font-normal tracking-wide px-4 sm:px-6 text-center">
+              We build websites, mobile apps, and optimize your online presence. SEO, GEO, AIO, social media, and Google Business management. From small businesses to large corporations.
             </p>
-            <div className="flex flex-col items-center space-y-6 sm:space-y-8">
+            <div ref={heroButtonRef} className="flex flex-col items-center space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-8 px-4">
               <div className="flex items-center justify-center w-full max-w-md sm:max-w-lg mx-auto">
                 <CallButton className="w-full sm:w-auto" />
               </div>
-              <p className="text-gray-500 max-w-md text-xs sm:text-sm tracking-wider uppercase font-semibold text-center">
+              <p className="text-gray-500 max-w-md text-xs sm:text-sm tracking-wider uppercase font-semibold text-center px-2">
                 50% TO START • 50% AFTER SATISFACTION • FAST RESPONSE TIME
               </p>
             </div>
@@ -906,72 +995,80 @@ export default function Home() {
        </section>
 
        {/* Our Projects Section */}
-       <section id="projects" ref={projectsSectionRef} className="py-16 bg-yellow-50">
+       <section id="projects" ref={projectsSectionRef} className="py-20 md:py-24 bg-black text-white relative overflow-hidden">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="text-center mb-12">
-             <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
+           <div className="text-center mb-16">
+             <div className="inline-flex items-center space-x-3 border border-white/30 px-6 py-2 text-white text-sm font-normal tracking-widest mb-6 backdrop-blur-sm">
                <span>OUR PROJECTS</span>
              </div>
-             <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
+             <h2 className="text-4xl md:text-6xl font-heading text-white mb-6 tracking-tight">
                RECENT WORK
              </h2>
-             <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide leading-relaxed font-normal">
+             <p className="text-xl text-white/80 max-w-3xl mx-auto tracking-wide leading-relaxed font-normal">
                Explore some of our latest projects. From construction companies to e-commerce platforms, we deliver results that drive business growth.
              </p>
            </div>
 
-           <div className="relative">
+           <div className="relative px-12 sm:px-16 md:px-20 lg:px-24">
              <Carousel
                opts={{
                  align: "start",
                  loop: true,
                }}
-               className="w-full max-w-6xl mx-auto"
+               className="w-full"
                setApi={setProjectsApi}
               aria-label="Projects showcase carousel"
              >
                <CarouselContent className="-ml-3 md:-ml-4">
                  {projects.map((project, index) => (
                    <CarouselItem key={project.id} className="pl-3 md:pl-4 pt-5 basis-4/5 sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                     <div className="bg-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:-translate-y-1 group border border-gray-100 overflow-hidden h-full">
-                       {/* Project Card */}
-                       <div className="p-8 text-center h-full flex flex-col">
+                     <div className="relative rounded-xl overflow-hidden h-full group">
+                       {/* Glass Background with Color Gradient */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-white/15 via-white/10 to-white/5 backdrop-blur-md rounded-xl border border-white/30 group-hover:border-yellow-200/50 transition-all duration-300"></div>
+                       
+                       {/* Color Accent Glow */}
+                       <div className="absolute inset-0 bg-gradient-to-br from-yellow-200/10 via-transparent to-blue-200/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-xl"></div>
+                       
+                       {/* Content */}
+                       <div className="relative p-8 text-center h-full flex flex-col z-10">
                          {/* Logo */}
                          <div className="flex justify-center mb-6">
-                           <div className="w-32 h-32 bg-white flex items-center justify-center p-4">
+                           <div className="w-32 h-32 flex items-center justify-center p-4 relative">
+                             {/* Logo Glow Effect */}
+                             <div className="absolute inset-0 bg-gradient-to-br from-yellow-200/20 to-blue-200/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                              {project.image ? (
                                <Image
                                  src={project.image}
                                  alt={`${project.name} logo`}
                                  width={128}
                                  height={128}
-                                 className="w-full h-full object-contain"
+                                 className="w-full h-full object-contain relative z-10"
                                />
                              ) : (
-                                 <Globe className="w-16 h-16 text-black" />
+                                 <Globe className="w-16 h-16 text-white relative z-10" />
                                )}
                              </div>
                            </div>
                            
                          {/* Project Name */}
-                         <h3 className="text-2xl font-heading font-bold text-black mb-3 tracking-tight">
+                         <h3 className="text-2xl font-heading font-bold text-white mb-3 tracking-tight relative z-10">
                                {project.name}
                              </h3>
                              
                              {/* Category Badge */}
-                         <div className="mb-6">
-                           <span className="inline-flex items-center px-4 py-2 bg-yellow-100 text-black text-sm font-normal tracking-widest uppercase rounded-full">
+                         <div className="mb-6 relative z-10">
+                           <span className="inline-flex items-center px-4 py-2 bg-gradient-to-r from-yellow-200/30 to-yellow-200/20 backdrop-blur-sm text-white text-sm font-normal tracking-widest uppercase rounded-full border border-yellow-200/40 shadow-lg">
                                  {project.category}
                                </span>
                        </div>
                        
                          {/* Visit Site Button */}
-                         <div className="mt-auto">
+                         <div className="mt-auto relative z-10">
                            <a
                              href={project.url}
                              target="_blank"
                              rel="noopener noreferrer"
-                             className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 font-normal text-sm tracking-widest uppercase transition-all duration-300 hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-105"
+                             className="inline-flex items-center gap-2 bg-gradient-to-r from-yellow-200 to-yellow-100 text-black px-6 py-3 font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:from-yellow-100 hover:to-yellow-200 hover:shadow-md hover:shadow-yellow-200/20 rounded-lg transform hover:scale-105"
                            >
                              <span>Visit Site</span>
                              <ExternalLink className="w-4 h-4" />
@@ -984,18 +1081,18 @@ export default function Home() {
                </CarouselContent>
                
                {/* Desktop Navigation Arrows */}
-               <CarouselPrevious className="hidden lg:flex -left-16 w-12 h-12 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-lg" />
-               <CarouselNext className="hidden lg:flex -right-16 w-12 h-12 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-lg" />
+               <CarouselPrevious className="hidden lg:flex -left-12 w-12 h-12 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:text-yellow-200 text-white border border-white/20 shadow-lg" />
+               <CarouselNext className="hidden lg:flex -right-12 w-12 h-12 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:text-yellow-200 text-white border border-white/20 shadow-lg" />
                
                {/* Tablet Navigation Arrows */}
-               <CarouselPrevious className="hidden sm:flex lg:hidden -left-8 w-10 h-10 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-md" />
-               <CarouselNext className="hidden sm:flex lg:hidden -right-8 w-10 h-10 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-md" />
+               <CarouselPrevious className="hidden sm:flex lg:hidden -left-10 w-10 h-10 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:text-yellow-200 text-white border border-white/20 shadow-md" />
+               <CarouselNext className="hidden sm:flex lg:hidden -right-10 w-10 h-10 bg-white/10 backdrop-blur-sm hover:bg-white/20 hover:text-yellow-200 text-white border border-white/20 shadow-md" />
              </Carousel>
 
              {/* Mobile Progress Indicator */}
              <div className="sm:hidden mt-8">
-               <div className="text-center text-sm text-gray-600 mb-3">
-                 <span className="font-normal">Projects</span> • <span className="text-black font-normal">{projectsCurrent} of {projectsCount}</span>
+               <div className="text-center text-sm text-white/80 mb-3">
+                 <span className="font-normal">Projects</span> • <span className="text-white font-normal">{projectsCurrent} of {projectsCount}</span>
                </div>
                <div className="flex justify-center gap-2">
                  {Array.from({ length: projectsCount }).map((_, index) => (
@@ -1003,13 +1100,13 @@ export default function Home() {
                      key={index} 
                      className={`w-3 h-3 rounded-full transition-all duration-300 ${
                        index === projectsCurrent - 1
-                         ? 'bg-black scale-110' 
-                         : 'bg-yellow-200'
+                         ? 'bg-white scale-110' 
+                         : 'bg-white/30'
                      }`}
                    ></div>
                  ))}
                </div>
-               <div className="text-center mt-3 text-xs text-gray-500">
+               <div className="text-center mt-3 text-xs text-white/60">
                  Touch and drag to navigate
                </div>
              </div>
@@ -1018,8 +1115,17 @@ export default function Home() {
        </section>
 
        {/* Client Results Section */}
-       <section ref={clientResultsRef} className="py-24 bg-white">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+       <section id="client-results" ref={clientResultsRef} className="py-24 bg-white relative overflow-hidden">
+         {/* Pattern Background */}
+         <div 
+           className="absolute inset-0 z-0 opacity-5"
+           style={{
+             backgroundImage: 'url(/pattern3.jpg)',
+             backgroundRepeat: 'repeat',
+             backgroundSize: 'auto',
+           }}
+         />
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
            <div className="text-center mb-16">
              <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
                <span>CLIENT RESULTS</span>
@@ -1035,13 +1141,25 @@ export default function Home() {
            {/* Results Grid */}
            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
              {clientResults.map((result, index) => (
-                 <div key={index} className="bg-yellow-50 p-8 rounded-xl shadow-lg border border-yellow-100">
-                   <div className="text-center">
-                     <div className="inline-flex items-center justify-center w-16 h-16 bg-black rounded-full mb-4">
-                       <result.icon className="w-8 h-8 text-white" />
+                 <div key={index} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
+                   {/* Image Section */}
+                   <div className="relative w-full h-48 overflow-hidden bg-gray-100">
+                     <Image
+                       src={result.image || ""}
+                       alt={result.metric}
+                       fill
+                       className="object-cover"
+                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                     />
+                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
+                     <div className="absolute top-4 right-4 inline-flex items-center justify-center w-12 h-12 bg-black rounded-full">
+                       <result.icon className="w-6 h-6 text-white" />
                      </div>
+                   </div>
+                   {/* Content Section */}
+                   <div className="p-6">
                      <h3 className="text-2xl font-normal text-black mb-2">{result.metric}</h3>
-                     <p className="text-gray-700 font-normal mb-2">{result.project}</p>
+                     <p className="text-gray-700 font-normal mb-3 text-sm">{result.project}</p>
                      <p className="text-gray-600 text-sm leading-relaxed font-normal">{result.description}</p>
                    </div>
                  </div>
@@ -1081,7 +1199,7 @@ export default function Home() {
                  <div key={index} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
                    <button
                      onClick={() => toggleStandalone(index)}
-                     className="w-full p-6 text-left hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
+                     className="w-full p-6 text-left hover:bg-gray-50 transition-all duration-300 ease-in-out flex items-center justify-between"
                    >
                      <div className="flex items-center gap-4">
                        <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
@@ -1092,7 +1210,7 @@ export default function Home() {
                          <p className="text-sm text-gray-600 font-normal">$250 flat rate</p>
                        </div>
                      </div>
-                     <div className="flex items-center gap-1 text-sm font-normal text-black bg-yellow-100 px-2 py-1 rounded-full transition-colors duration-200 hover:bg-yellow-200">
+                     <div className="flex items-center gap-1 text-sm font-normal text-black bg-yellow-100 px-2 py-1 rounded-full transition-all duration-300 ease-in-out hover:bg-yellow-200">
                        <Info className="w-3 h-3" />
                        <span className="hidden sm:inline">{isOpen ? 'Less' : 'More'}</span>
                      </div>
@@ -1121,7 +1239,7 @@ export default function Home() {
            </div>
 
            <div className="text-center">
-             <a href="#contact" onClick={() => handleStandaloneSelect('standalone')} className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 font-normal text-sm sm:text-lg tracking-widest uppercase transition-colors duration-300 hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-105">
+             <a href="#contact" onClick={() => handleStandaloneSelect('standalone')} className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 font-normal text-sm sm:text-lg tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-105">
                <span className="hidden sm:inline">Build My Standalone Site</span>
                <span className="sm:hidden">Build Site</span>
                <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
@@ -1129,189 +1247,166 @@ export default function Home() {
            </div>
          </div>
        </section>
-      <section id="pricing" ref={pricingRef} className="py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="pricing" ref={pricingRef} className="py-24 bg-white relative overflow-hidden">
+        {/* Pattern Background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-5"
+          style={{
+            backgroundImage: 'url(/pattern3.jpg)',
+            backgroundRepeat: 'repeat',
+            backgroundSize: 'auto',
+          }}
+        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-16">
             <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
-              <span>PRICING OPTIONS</span>
+              <span>PRICING</span>
             </div>
             <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
-              CHOOSE YOUR PACKAGE
+              SIMPLE, TRANSPARENT PRICING
             </h2>
             <p className="text-xl text-gray-600 max-w-4xl mx-auto tracking-wide leading-relaxed mb-4 font-normal">
-              Transparent pricing with clear deliverables. All packages include revisions until launch and secure SSL hosting.
+              Three service categories. Choose what fits your needs. 50% to start, 50% after satisfaction.
             </p>
-            <div className="inline-flex items-center gap-2 bg-yellow-100 px-4 py-2 rounded-full">
-              <Shield className="w-5 h-5 text-black" />
-              <span className="text-black font-normal text-sm">50% to start • 50% after satisfaction</span>
-            </div>
           </div>
 
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 items-stretch mb-12">
-            {/* Starter Package */}
-            <div className="bg-white border-2 border-gray-200 p-8 lg:p-10 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300 group min-h-[600px] max-h-[600px]">
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl lg:text-3xl font-normal tracking-tight text-black">Starter</h3>
-                  <div className="text-4xl lg:text-5xl font-normal text-black mb-2 mt-4">$750</div>
-                  <p className="text-gray-600 text-sm lg:text-base font-normal">Perfect for getting started</p>
-                </div>
-                
-                <div className="flex-1 overflow-y-auto">
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Up to 5 pages</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Basic SEO optimization</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Delivery in 2 week</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Mobile responsive design</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Contact form integration</span></li>
-                  </ul>
-                </div>
-                
-                <div className="mt-auto">
-                  <a href="#contact" onClick={() => handlePackageSelect('Starter')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-105">
-                    Get Started
-                  </a>
-                </div>
-              </div>
+          {/* Business Apps Pricing */}
+          <div className="mb-20">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-heading text-black mb-4">Business Apps</h3>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">Mobile & web applications for businesses</p>
             </div>
-
-            {/* Business Package */}
-            <div className="bg-black text-white p-8 lg:p-10 flex flex-col hover:shadow-2xl transition-all duration-300 group min-h-[600px] max-h-[600px]">
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="text-center mb-6">
-                  <div className="inline-flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full mb-3">
-                    <span className="text-black font-normal text-xs">MOST POPULAR</span>
-                  </div>
-                  <h3 className="text-2xl lg:text-3xl font-normal tracking-tight">Business</h3>
-                  <div className="text-4xl lg:text-5xl font-normal text-white mb-2 mt-4">$1200</div>
-                  <p className="text-gray-300 text-sm lg:text-base font-normal">Most businesses choose this</p>
-                </div>
-
-                <div className="flex-1 overflow-y-auto">
-                  <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-200 font-normal">Unlimited pages</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-200 font-normal">Advanced SEO optimization</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-200 font-normal">Delivery in 3-4 weeks</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-200 font-normal">Content management system</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-200 font-normal">Analytics integration</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-200 font-normal">Social media integration</span></li>
-                  </ul>
-                </div>
-                
-                <div className="mt-auto">
-                  <a href="#contact" onClick={() => handlePackageSelect('Business')} className="block w-full text-center py-3 bg-white text-black font-normal text-sm tracking-widest uppercase transition-all duration-300 hover:bg-gray-100 rounded-lg transform hover:scale-105">
-                    Get Started
-                  </a>
-                </div>
-              </div>
-                  </div>
-
-            {/* Pro Package */}
-            <div className="bg-white border-2 border-gray-200 p-8 lg:p-10 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300 group min-h-[600px] max-h-[600px]">
-              <div className="relative z-10 flex flex-col h-full">
-                <div className="text-center mb-6">
-                  <h3 className="text-2xl lg:text-3xl font-normal tracking-tight text-black">Pro</h3>
-                  <div className="text-4xl lg:text-5xl font-normal text-black mb-2 mt-4">$2500</div>
-                  <p className="text-gray-600 text-sm lg:text-base font-normal">Custom full solution</p>
-                </div>
-
-                <div className="flex-1 overflow-y-auto">
-                <ul className="space-y-3 mb-8">
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Custom full solution</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">4-6 week delivery</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">E-commerce functionality</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Custom integrations</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Advanced analytics</span></li>
-                    <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm lg:text-base text-gray-700 font-normal">Priority support</span></li>
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+                <h4 className="text-2xl font-normal text-black mb-4">Starter</h4>
+                <div className="text-4xl font-normal text-black mb-6">$750</div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Simple web app</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">2-3 weeks delivery</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Mobile responsive</span></li>
                 </ul>
+                <a href="#contact" onClick={() => handlePackageSelect('Business App - Starter')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                  Get Started
+                </a>
+              </div>
+
+              <div className="bg-black text-white p-8 flex flex-col hover:shadow-2xl transition-all duration-300">
+                <div className="inline-flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full mb-4 w-fit">
+                  <span className="text-black font-normal text-xs">POPULAR</span>
                 </div>
-                
-                <div className="mt-auto">
-                  <a href="#contact" onClick={() => handlePackageSelect('Pro')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-105">
-                    Get Started
-                  </a>
-                </div>
+                <h4 className="text-2xl font-normal mb-4">Business</h4>
+                <div className="text-4xl font-normal mb-6">$1,500</div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Full-featured app</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">3-4 weeks delivery</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Custom features</span></li>
+                </ul>
+                <a href="#contact" onClick={() => handlePackageSelect('Business App - Business')} className="block w-full text-center py-3 bg-white text-black font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-100 rounded-lg transform hover:scale-[1.02]">
+                  Get Started
+                </a>
+              </div>
+
+              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+                <h4 className="text-2xl font-normal text-black mb-4">Enterprise</h4>
+                <div className="text-4xl font-normal text-black mb-6">Custom</div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Complex solutions</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Scalable architecture</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Ongoing support</span></li>
+                </ul>
+                <a href="#contact" onClick={() => handlePackageSelect('Business App - Enterprise')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                  Contact Us
+                </a>
               </div>
             </div>
           </div>
 
-          {/* Monthly Support Plans */}
-          <div className="bg-yellow-50 p-8 rounded-xl border border-yellow-100">
-            <div className="text-center mb-8">
-              <h3 className="text-2xl font-normal text-black mb-4">Grimo Hosting Monthly Plans</h3>
-              <p className="text-gray-600 max-w-2xl mx-auto font-normal">Keep your website running smoothly with our ongoing hosting and support plans.</p>
+          {/* Online Presence Pricing */}
+          <div className="mb-20">
+            <div className="text-center mb-12">
+              <h3 className="text-3xl md:text-4xl font-heading text-black mb-4">Online Presence</h3>
+              <p className="text-lg text-gray-600 max-w-2xl mx-auto">SEO, GEO, AIO, Social Media & Google Business</p>
             </div>
-            
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:gap-6">
-              {hostingData.map((plan, index) => {
-                const isOpen = openHosting.includes(index);
-                
-                return (
-                  <div key={index} className="bg-white rounded-lg shadow-md border border-gray-100 overflow-hidden">
-                    <button
-                      onClick={() => toggleHosting(index)}
-                      className="w-full p-6 text-left hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
-                    >
-                      <div className="flex-1">
-                        <div className="flex items-center gap-2 mb-2">
-                          <h4 className="text-lg font-normal text-black">{plan.title}</h4>
-                          {plan.popular && (
-                            <span className="bg-black text-white px-2 py-1 rounded-full text-xs font-normal">POPULAR</span>
-                          )}
-                        </div>
-                        <div className="text-2xl font-normal text-black">
-                          {plan.price}<span className="text-sm font-normal text-gray-600">{plan.period}</span>
-                        </div>
-                      </div>
-                      <ChevronDown 
-                        className={`w-5 h-5 text-gray-400 transition-transform duration-200 ${
-                          isOpen ? 'rotate-180' : ''
-                        }`} 
-                      />
-                    </button>
-                    
-                    <div className={`overflow-hidden transition-all duration-300 ${
-                      isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                    }`}>
-                      <div className="px-6 pb-6">
-                        <ul className="space-y-2">
-                          {plan.features.map((feature, featureIndex) => (
-                            <li key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
-                              <CheckCircle size={14} className="text-black flex-shrink-0" />
-                              <span className="font-normal">{feature}</span>
-                            </li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                );
-              })}
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
+              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+                <h4 className="text-2xl font-normal text-black mb-4">Starter</h4>
+                <div className="text-4xl font-normal text-black mb-2">$299</div>
+                <div className="text-sm text-gray-600 mb-6">/month</div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Basic SEO setup</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Google Business optimization</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Monthly reports</span></li>
+                </ul>
+                <a href="#contact" onClick={() => handlePackageSelect('Online Presence - Starter')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                  Get Started
+                </a>
+              </div>
+
+              <div className="bg-black text-white p-8 flex flex-col hover:shadow-2xl transition-all duration-300">
+                <div className="inline-flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full mb-4 w-fit">
+                  <span className="text-black font-normal text-xs">POPULAR</span>
+                </div>
+                <h4 className="text-2xl font-normal mb-4">Business</h4>
+                <div className="text-4xl font-normal mb-2">$799</div>
+                <div className="text-sm text-gray-300 mb-6">/month</div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Advanced SEO & GEO</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Social media management</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Content creation</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Weekly optimization</span></li>
+                </ul>
+                <a href="#contact" onClick={() => handlePackageSelect('Online Presence - Business')} className="block w-full text-center py-3 bg-white text-black font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-100 rounded-lg transform hover:scale-[1.02]">
+                  Get Started
+                </a>
+              </div>
+
+              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+                <h4 className="text-2xl font-normal text-black mb-4">Enterprise</h4>
+                <div className="text-4xl font-normal text-black mb-2">Custom</div>
+                <div className="text-sm text-gray-600 mb-6">/month</div>
+                <ul className="space-y-3 mb-8 flex-grow">
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Full AIO optimization</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Dedicated account manager</span></li>
+                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Multi-platform management</span></li>
+                </ul>
+                <a href="#contact" onClick={() => handlePackageSelect('Online Presence - Enterprise')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                  Contact Us
+                </a>
+              </div>
             </div>
           </div>
 
-          <div className="text-center mt-12">
-            <p className="text-gray-600 text-lg mb-8">
-              <strong>Note:</strong> Domain purchase not included. Project timeline varies by complexity.
+          <div className="text-center">
+            <p className="text-gray-600 text-lg mb-4">
+              Standalone sites start at <strong>$250</strong> - See <a href="#standalone" className="text-black underline hover:text-gray-600">Standalone section</a> for details.
             </p>
-            <a href="#contact" className="inline-flex items-center gap-2 text-blue-900 font-semibold hover:text-blue-700 transition-colors duration-300 text-lg">
-              <span>Ready to get started?</span>
-            </a>
+            <p className="text-sm text-gray-500">
+              50% deposit to start • 50% after satisfaction • All prices subject to project scope
+            </p>
           </div>
         </div>
       </section>
 
       {/* FAQ Section */}
-      <section id="faq" ref={faqRef} className="py-16 bg-gray-50">
-        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
+      <section id="faq" ref={faqRef} className="py-16 bg-black text-white relative overflow-hidden">
+        {/* Pattern Background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-10"
+          style={{
+            backgroundImage: 'url(/pattern8.png)',
+            backgroundRepeat: 'repeat',
+            backgroundSize: 'auto',
+          }}
+        />
+        <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-12">
-            <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
+            <div className="inline-flex items-center space-x-3 border border-white/30 px-6 py-2 text-white text-sm font-normal tracking-widest mb-6 backdrop-blur-sm">
               <span>FAQ</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
+            <h2 className="text-4xl md:text-6xl font-heading text-white mb-6 tracking-tight">
               FREQUENTLY ASKED QUESTIONS
             </h2>
-            <p className="text-xl text-gray-600 max-w-2xl mx-auto tracking-wide leading-relaxed font-normal">
+            <p className="text-xl text-white/80 max-w-2xl mx-auto tracking-wide leading-relaxed font-normal">
               Got questions? We've got answers.
             </p>
           </div>
@@ -1321,30 +1416,33 @@ export default function Home() {
               const isOpen = openFaq.includes(index);
               
               return (
-                <div key={index} className="bg-white rounded-lg shadow-sm border border-gray-100 overflow-hidden">
+                <div key={index} className="bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 overflow-hidden">
                   <button
                     onClick={() => toggleFaq(index)}
-                    className="w-full p-4 text-left hover:bg-gray-50 transition-colors duration-200 flex items-center justify-between"
+                    className="w-full p-4 text-left hover:bg-white/10 transition-all duration-300 ease-in-out flex items-center justify-between"
                   >
-                    <h3 className="text-base font-normal text-black pr-4">{faq.question}</h3>
+                    <h3 className="text-base font-normal text-white pr-4">{faq.question}</h3>
                     <ChevronDown 
-                      className={`w-4 h-4 text-gray-400 transition-transform duration-200 flex-shrink-0 ${
-                        isOpen ? 'rotate-180' : ''
+                      className={`w-4 h-4 text-white/70 transition-transform duration-300 flex-shrink-0 ${
+                        isOpen ? 'rotate-180 text-white' : ''
                       }`} 
                     />
                   </button>
                   
-                  {isOpen && (
-                    <div className={`overflow-hidden transition-all duration-300 ${
-                      isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                    }`}>
-                      <div className="px-4 pb-4">
-                        <p className="text-sm text-gray-600 leading-relaxed font-normal">
-                          {faq.answer}
-                        </p>
-                      </div>
+                  <div 
+                    className={`overflow-hidden transition-all duration-500 ease-in-out ${
+                      isOpen ? 'max-h-[500px] opacity-100' : 'max-h-0 opacity-0'
+                    }`}
+                    style={{
+                      transitionProperty: 'max-height, opacity',
+                    }}
+                  >
+                    <div className="px-4 pb-4 pt-0">
+                      <p className="text-sm text-white/80 leading-relaxed font-normal">
+                        {faq.answer}
+                      </p>
                     </div>
-                  )}
+                  </div>
                 </div>
               );
             })}
@@ -1353,7 +1451,7 @@ export default function Home() {
       </section>
 
       {/* Services Section */}
-      <section id="services" ref={servicesRef} className="py-24 bg-gray-50 relative overflow-hidden">
+      <section id="services" ref={servicesRef} className="py-16 md:py-20 relative overflow-hidden">
         {/* Background Image */}
         <div className="absolute inset-0 z-0">
           <div 
@@ -1364,99 +1462,57 @@ export default function Home() {
               transform: 'scale(1.1)'
             }}
           />
-          <div className="absolute inset-0 bg-gray-50/60" />
+          <div className="absolute inset-0 bg-black/70" />
         </div>
         
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-          <div className="text-center mb-16">
-            <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
-              <span>SERVICES</span>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+          <div className="text-center mb-10 md:mb-12">
+            <div className="inline-flex items-center space-x-3 border border-white/30 px-6 py-2 text-white text-sm font-normal tracking-widest mb-4 backdrop-blur-sm">
+              <span>WHAT WE DO</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
-              WHAT WE BUILD
-            </h2>
-            <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide leading-relaxed font-normal">
-              From design to deployment, we create digital experiences that drive business growth and engage your customers.
+            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto tracking-wide leading-relaxed font-normal">
+              Professional online presence solutions. Websites, mobile apps, SEO, GEO, and AIO optimization.
             </p>
-            
-            {/* Desktop/Tablet scroll hint */}
-            <div className="hidden sm:block text-center mt-4">
-              <p className="text-sm text-black font-normal">
-                Use arrow buttons to navigate our services
-              </p>
-            </div>
           </div>
 
-          <div className="relative">
-            <Carousel
-              opts={{
-                align: "start",
-                loop: true,
-              }}
-              className="w-full max-w-6xl mx-auto"
-              setApi={setApi}
-              aria-label="Services showcase carousel"
-            >
-              <CarouselContent className="-ml-3 md:-ml-4">
-                {services.map((service, index) => {
-                  const IconComponent = service.icon;
-                  return (
-                    <CarouselItem key={index} className="pl-3 md:pl-4 pt-5 basis-full sm:basis-1/2 lg:basis-1/3 xl:basis-1/4">
-                      <div className="bg-white p-6 lg:p-8 shadow-lg hover:shadow-xl transition-all duration-300 border-2 border-gray-200 hover:border-blue-900 h-full rounded-lg">
-                        <div className="flex flex-col h-full">
-                          <h3 className="text-xl lg:text-2xl font-normal text-black mb-4">{service.title}</h3>
-                          <p className="text-gray-700 leading-relaxed text-base lg:text-lg flex-grow font-normal">{service.description}</p>
-                          
-                          {/* Card number indicator */}
-                          <div className="mt-4 pt-4 border-t border-gray-100">
-                            <span className="text-xs font-normal text-black bg-yellow-100 px-2 py-1 rounded-full">
-                              {String(index + 1).padStart(2, '0')}
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </CarouselItem>
-                  );
-                })}
-              </CarouselContent>
+          {/* Services List - 2 columns on desktop/tablet, 1 column on mobile */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+            {services.map((service, index) => {
+              const IconComponent = service.icon;
               
-              {/* Desktop arrows with better visibility */}
-              <CarouselPrevious className="hidden lg:flex -left-16 w-12 h-12 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-lg" />
-              <CarouselNext className="hidden lg:flex -right-16 w-12 h-12 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-lg" />
-              
-              {/* Tablet arrows */}
-              <CarouselPrevious className="hidden sm:flex lg:hidden -left-8 w-10 h-10 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-md" />
-              <CarouselNext className="hidden sm:flex lg:hidden -right-8 w-10 h-10 bg-black hover:bg-gray-800 hover:text-yellow-200 text-white border-0 shadow-md" />
-            </Carousel>
-
-            {/* Real-time progress indicator for mobile */}
-            <div className="sm:hidden mt-8">
-              <div className="text-center text-sm text-gray-600 mb-3">
-                <span className="font-normal">Services</span> • <span className="text-black font-normal">{current} of {count}</span>
-              </div>
-              <div className="flex justify-center gap-2">
-                {Array.from({ length: count }).map((_, index) => (
-                  <div 
-                    key={index} 
-                    className={`w-3 h-3 rounded-full transition-all duration-300 ${
-                      index === current - 1
-                        ? 'bg-black scale-110' 
-                        : 'bg-yellow-200'
-                    }`}
-                  ></div>
-                ))}
-              </div>
-              <div className="text-center mt-3 text-xs text-gray-500">
-                Touch and drag to navigate
-              </div>
-            </div>
+              return (
+                <div key={index} className="flex items-start gap-3 md:gap-4 border-b border-white/20 pb-4 md:pb-5">
+                  <div className="w-8 h-8 md:w-10 md:h-10 flex items-center justify-center text-white flex-shrink-0 mt-0.5">
+                    <IconComponent className="w-4 h-4 md:w-5 md:h-5" />
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="text-base md:text-lg font-heading text-white font-normal mb-1">
+                      {service.title}
+                    </h3>
+                    <p className="text-sm md:text-base text-white/80 leading-relaxed font-normal">
+                      {service.description}
+                    </p>
+                  </div>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
 
       {/* Contact CTA Section */}
-      <section id="contact" ref={contactRef} className="py-24 bg-black text-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <section id="contact" ref={contactRef} className="py-24 bg-black text-white relative overflow-hidden">
+        {/* Pattern Background */}
+        <div 
+          className="absolute inset-0 z-0 opacity-5"
+          style={{
+            backgroundImage: 'url(/pattern9.png)',
+            backgroundRepeat: 'no-repeat',
+            backgroundSize: 'cover',
+            backgroundPosition: 'center',
+          }}
+        />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
           <div className="max-w-4xl mx-auto">
             <div className="inline-flex items-center space-x-3 bg-yellow-100 px-6 py-2 text-black text-sm font-normal tracking-widest mb-8">
               <Mail size={16} />
@@ -1517,15 +1573,20 @@ export default function Home() {
                     className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
                   >
                     <option value="">Select an option</option>
-                    <optgroup label="Standalone Sites">
+                    <optgroup label="Standalone Sites ($250)">
                       <option value="portfolio">Portfolio Site</option>
                       <option value="event">Event Scheduling Page</option>
                       <option value="mini-business">Mini Business Page</option>
                     </optgroup>
-                    <optgroup label="Packages">
-                      <option value="starter">Starter Package ($750)</option>
-                      <option value="business">Business Package ($1200)</option>
-                      <option value="pro">Pro Package ($2500)</option>
+                    <optgroup label="Business Apps">
+                      <option value="business-app-starter">Starter ($750)</option>
+                      <option value="business-app-business">Business ($1,500)</option>
+                      <option value="business-app-enterprise">Enterprise (Custom)</option>
+                    </optgroup>
+                    <optgroup label="Online Presence">
+                      <option value="online-presence-starter">Starter ($299/month)</option>
+                      <option value="online-presence-business">Business ($799/month)</option>
+                      <option value="online-presence-enterprise">Enterprise (Custom/month)</option>
                     </optgroup>
                   </select>
                 </div>
@@ -1582,7 +1643,7 @@ export default function Home() {
                   <button
                     type="submit"
                     disabled={isSubmitting}
-                    className="inline-flex items-center gap-2 bg-yellow-100 text-black px-8 py-4 font-normal text-lg tracking-widest uppercase transition-colors duration-300 hover:bg-yellow-200 rounded-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+                    className="inline-flex items-center gap-2 bg-yellow-100 text-black px-8 py-4 font-normal text-lg tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-yellow-200 rounded-lg transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
                   >
                     <Mail className="w-5 h-5" />
                     <span>{isSubmitting ? 'Sending...' : 'Send Message'}</span>
@@ -1597,7 +1658,7 @@ export default function Home() {
               </div>
               
               <p className="text-gray-500 max-w-lg text-sm tracking-widest uppercase font-normal">
-                WEBSITES & MOBILE APPS • FAST DELIVERY • FLEXIBLE PRICING • PREMIUM QUALITY
+                WEBSITES • MOBILE APPS • SEO • GEO • AIO • SOCIAL MEDIA • GOOGLE BUSINESS • FAST DELIVERY
               </p>
             </div>
           </div>
