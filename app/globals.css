@@ -75,3 +75,15 @@ body {
 .font-semibold { font-weight: 600; }
 .font-bold { font-weight: 700; }
 
+/* Sharp design overrides for Projects section */
+.project-card {
+  border-radius: 0 !important;
+}
+
+.project-card-item a {
+  border-radius: 0 !important;
+}
+
+.project-card-item span {
+  border-radius: 0 !important;
+}

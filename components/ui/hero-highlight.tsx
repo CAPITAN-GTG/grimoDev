@@ -27,11 +27,13 @@ export const HeroHighlight = ({ children, className, ...props }: HeroHighlightPr
 
 interface HighlightProps extends React.HTMLAttributes<HTMLSpanElement> {}
 
-export const Highlight = ({ children, className, ...props }: HighlightProps) => {
+export const Highlight = React.forwardRef<HTMLSpanElement, HighlightProps>(({ children, className, ...props }, ref) => {
   return (
-    <span className={cn("relative inline-block", className)} {...props}>
+    <span ref={ref} className={cn("relative inline-block", className)} {...props}>
       <span className="absolute inset-0 -skew-y-3 bg-blue-900/20 rounded-md" />
       <span className="relative">{children}</span>
     </span>
   );
-}; 
+});
+
+Highlight.displayName = "Highlight"; 
