@@ -4,6 +4,12 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Calendar, Briefcase, ArrowUpRight, ExternalLink, ChevronDown, Info, ShoppingCart, Search, MapPin, TrendingUp, Share2 } from "lucide-react";
+import dynamic from "next/dynamic";
+
+const Interactive3DShowcase = dynamic(
+  () => import("@/components/Interactive3DShowcase"),
+  { ssr: false }
+);
 import toast, { Toaster } from 'react-hot-toast';
 import {
   Carousel,
@@ -1547,6 +1553,9 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Interactive 3D Showcase Section */}
+      <Interactive3DShowcase />
 
       {/* Contact CTA Section */}
       <section id="contact" ref={contactRef} className="py-24 bg-black text-white relative overflow-hidden">
