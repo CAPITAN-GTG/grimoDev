@@ -41,6 +41,10 @@ export default function Home() {
   const [selectedPackage, setSelectedPackage] = useState<string>('');
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [showHostingOptions, setShowHostingOptions] = useState<boolean>(false);
+  const [selectedHostingPlan, setSelectedHostingPlan] = useState<string>('');
+  const [isServiceDropdownOpen, setIsServiceDropdownOpen] = useState<boolean>(false);
+  const [isHostingDropdownOpen, setIsHostingDropdownOpen] = useState<boolean>(false);
+  const [showHostingInfo, setShowHostingInfo] = useState<boolean>(false);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const formRef = useRef<HTMLFormElement>(null);
   
@@ -814,22 +818,28 @@ export default function Home() {
   const hostingData = [
     {
       title: "Basic",
-      price: "$25",
+      price: "$50",
       period: "/month",
       features: ["Grimo Hosting", "Security updates", "Basic maintenance", "Email support"]
     },
     {
       title: "Standard",
-      price: "$200",
+      price: "$150",
       period: "/month",
       features: ["Everything in Basic", "Website changes upon request", "Content updates", "Performance monitoring", "Priority support"],
       popular: true
     },
     {
       title: "Premium",
-      price: "$500",
+      price: "$300",
       period: "/month",
       features: ["Everything in Standard", "Advanced analytics", "Infrastructure updates", "Latest technology", "Dedicated support"]
+    },
+    {
+      title: "Elite",
+      price: "$800",
+      period: "/month",
+      features: ["Everything in Premium", "Full-service management", "Strategy & consulting", "Priority response", "Custom solutions"]
     }
   ];
 
@@ -853,6 +863,50 @@ export default function Home() {
       features: ["Single-page design", "Contact forms", "Service listings", "Mobile optimized"]
     }
   ];
+
+  const reasonGroups = [
+    {
+      label: "Standalone Sites ($250)",
+      options: [
+        { value: "portfolio", label: "Portfolio Site" },
+        { value: "event", label: "Event Scheduling Page" },
+        { value: "mini-business", label: "Mini Business Page" },
+      ],
+    },
+    {
+      label: "Business Apps",
+      options: [
+        { value: "business-app-starter", label: "Starter ($750)" },
+        { value: "business-app-business", label: "Business ($1,500)" },
+        { value: "business-app-enterprise", label: "Enterprise (Custom)" },
+      ],
+    },
+    {
+      label: "Online Presence",
+      options: [
+        { value: "online-presence-starter", label: "Starter ($299/month)" },
+        { value: "online-presence-business", label: "Business ($799/month)" },
+        { value: "online-presence-enterprise", label: "Enterprise (Custom/month)" },
+      ],
+    },
+  ];
+
+  const hostingPlanOptions = [
+    { value: "Basic - $50/month", label: "Basic ($50/month) - Hosting & upkeep" },
+    { value: "Standard - $150/month", label: "Standard ($150/month) - Site updates & content" },
+    { value: "Premium - $300/month", label: "Premium ($300/month) - Advanced support" },
+    { value: "Elite - $800/month", label: "Elite ($800/month) - Full management & ads" },
+  ];
+
+  const getReasonLabel = (value: string) => {
+    for (const group of reasonGroups) {
+      const option = group.options.find((opt) => opt.value === value);
+      if (option) {
+        return option.label;
+      }
+    }
+    return "";
+  };
 
   // Dropdown toggle functions
   const toggleFaq = (index: number) => {
@@ -881,7 +935,33 @@ export default function Home() {
 
   const handlePackageSelect = (packageName: string) => {
     setSelectedPackage(packageName);
-    setSelectedReason(packageName.toLowerCase());
+
+    let reasonValue = packageName.toLowerCase();
+
+    switch (packageName) {
+      case 'Business App - Starter':
+        reasonValue = 'business-app-starter';
+        break;
+      case 'Business App - Business':
+        reasonValue = 'business-app-business';
+        break;
+      case 'Business App - Enterprise':
+        reasonValue = 'business-app-enterprise';
+        break;
+      case 'Online Presence - Starter':
+        reasonValue = 'online-presence-starter';
+        break;
+      case 'Online Presence - Business':
+        reasonValue = 'online-presence-business';
+        break;
+      case 'Online Presence - Enterprise':
+        reasonValue = 'online-presence-enterprise';
+        break;
+      default:
+        break;
+    }
+
+    setSelectedReason(reasonValue);
     // Scroll to contact form
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
@@ -894,10 +974,37 @@ export default function Home() {
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setIsSubmitting(true);
 
     // Dismiss any existing toasts
     toast.dismiss();
+
+    if (!selectedReason) {
+      toast.error('Please select what you are looking for.', {
+        style: {
+          background: '#fef3c7',
+          color: '#000000',
+          border: '1px solid #000000',
+          borderRadius: '8px',
+          fontFamily: 'Outfit, sans-serif',
+        },
+      });
+      return;
+    }
+
+    if (showHostingOptions && !selectedHostingPlan) {
+      toast.error('Please select a hosting plan since you\'re interested in hosting options.', {
+        style: {
+          background: '#fef3c7',
+          color: '#000000',
+          border: '1px solid #000000',
+          borderRadius: '8px',
+          fontFamily: 'Outfit, sans-serif',
+        },
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
 
     const formData = new FormData(e.currentTarget);
     const data = {
@@ -951,6 +1058,10 @@ export default function Home() {
         setSelectedReason('');
         setSelectedPackage('');
         setShowHostingOptions(false);
+        setSelectedHostingPlan('');
+        setIsServiceDropdownOpen(false);
+        setIsHostingDropdownOpen(false);
+        setShowHostingInfo(false);
         setOpenFaq([]);
         setOpenHosting([]);
         setOpenStandalone([]);
@@ -1608,35 +1719,62 @@ export default function Home() {
                   </div>
                 </div>
                 
-                <div>
+                <div className="relative">
                   <label htmlFor="reason" className="block text-sm font-normal text-gray-300 mb-2 text-left">
                     What are you looking for? *
                   </label>
-                  <select
-                    id="reason"
-                    name="reason"
-                    required
-                    value={selectedReason}
-                    onChange={(e) => setSelectedReason(e.target.value)}
-                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
+                  <input type="hidden" id="reason" name="reason" value={selectedReason} />
+                  <button
+                    type="button"
+                    onClick={() => setIsServiceDropdownOpen((prev) => !prev)}
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
                   >
-                    <option value="">Select an option</option>
-                    <optgroup label="Standalone Sites ($250)">
-                      <option value="portfolio">Portfolio Site</option>
-                      <option value="event">Event Scheduling Page</option>
-                      <option value="mini-business">Mini Business Page</option>
-                    </optgroup>
-                    <optgroup label="Business Apps">
-                      <option value="business-app-starter">Starter ($750)</option>
-                      <option value="business-app-business">Business ($1,500)</option>
-                      <option value="business-app-enterprise">Enterprise (Custom)</option>
-                    </optgroup>
-                    <optgroup label="Online Presence">
-                      <option value="online-presence-starter">Starter ($299/month)</option>
-                      <option value="online-presence-business">Business ($799/month)</option>
-                      <option value="online-presence-enterprise">Enterprise (Custom/month)</option>
-                    </optgroup>
-                  </select>
+                    <span className="text-sm text-gray-200">
+                      {selectedReason ? getReasonLabel(selectedReason) : 'Select an option'}
+                    </span>
+                    <ChevronDown
+                      className={`w-4 h-4 text-gray-300 transition-transform duration-200 ${
+                        isServiceDropdownOpen ? 'rotate-180' : ''
+                      }`}
+                    />
+                  </button>
+                  <div
+                    className={`absolute left-0 right-0 mt-2 bg-gray-900 border border-gray-700 rounded-lg shadow-xl overflow-hidden transform origin-top transition-all duration-200 z-50 ${
+                      isServiceDropdownOpen
+                        ? 'opacity-100 scale-100 translate-y-0'
+                        : 'opacity-0 scale-95 -translate-y-1 pointer-events-none'
+                    }`}
+                  >
+                    <div className="max-h-64 overflow-y-auto py-2">
+                      {reasonGroups.map((group, groupIndex) => (
+                        <div
+                          key={group.label}
+                          className={`px-4 pb-2 ${groupIndex !== 0 ? 'border-t border-gray-800 pt-2' : ''}`}
+                        >
+                          <div className="text-xs uppercase tracking-widest text-gray-400 mb-1 text-left">
+                            {group.label}
+                          </div>
+                          {group.options.map((option) => (
+                            <button
+                              key={option.value}
+                              type="button"
+                              onClick={() => {
+                                setSelectedReason(option.value);
+                                setIsServiceDropdownOpen(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-md text-sm ${
+                                selectedReason === option.value
+                                  ? 'bg-yellow-100 text-black'
+                                  : 'text-gray-200 hover:bg-gray-800'
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex items-center space-x-3">
@@ -1645,31 +1783,90 @@ export default function Home() {
                     id="hosting"
                     name="hosting"
                     checked={showHostingOptions}
-                    onChange={(e) => setShowHostingOptions(e.target.checked)}
+                    onChange={(e) => {
+                      setShowHostingOptions(e.target.checked);
+                      if (!e.target.checked) {
+                        setSelectedHostingPlan('');
+                        setIsHostingDropdownOpen(false);
+                      }
+                    }}
                     className="w-4 h-4 text-yellow-200 bg-gray-800 border-gray-600 rounded focus:ring-yellow-200 focus:ring-2"
                   />
                   <label htmlFor="hosting" className="text-sm font-normal text-gray-300">
                     I'm also interested in hosting options
                   </label>
+                  <div
+                    className="relative"
+                    onMouseEnter={() => setShowHostingInfo(true)}
+                    onMouseLeave={() => setShowHostingInfo(false)}
+                  >
+                    <div
+                      className="p-1 rounded-full text-gray-400 hover:text-yellow-200 hover:bg-gray-800 transition-colors duration-200 cursor-default"
+                      aria-label="More info about hosting"
+                    >
+                      <Info className="w-4 h-4" />
+                    </div>
+                    {showHostingInfo && (
+                      <div className="absolute left-0 mt-2 w-64 bg-gray-900 border border-gray-700 rounded-lg shadow-xl p-3 text-left text-xs text-gray-200 z-50">
+                        <p>
+                          Higher hosting tiers can include ongoing Facebook or Google ads
+                          at a steady monthly pace. For full details and options, contact us.
+                        </p>
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 {showHostingOptions && (
-                  <div className="overflow-hidden transition-all duration-300 max-h-96 opacity-100">
+                  <div className="transition-all duration-300 max-h-96 opacity-100">
                     <div className="bg-gray-800 p-4 rounded-lg">
                       <label htmlFor="hosting-plan" className="block text-sm font-normal text-gray-300 mb-2 text-left">
                         Hosting Plan Preference
                       </label>
-                      <select
-                        id="hosting-plan"
-                        name="hosting-plan"
-                        required={showHostingOptions}
-                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
+                      <input type="hidden" id="hosting-plan" name="hosting-plan" value={selectedHostingPlan} />
+                      <button
+                        type="button"
+                        onClick={() => setIsHostingDropdownOpen((prev) => !prev)}
+                        className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white flex items-center justify-between text-left focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
                       >
-                        <option value="">Select hosting plan</option>
-                        <option value="basic">Basic ($25/month) - Hosting & Upkeep</option>
-                        <option value="standard">Standard ($200/month) - Website Changes</option>
-                        <option value="premium">Premium ($500/month) - APIs & Infrastructure</option>
-                      </select>
+                        <span className="text-sm text-gray-200">
+                          {selectedHostingPlan || 'Select hosting plan'}
+                        </span>
+                        <ChevronDown
+                          className={`w-4 h-4 text-gray-300 transition-transform duration-200 ${
+                            isHostingDropdownOpen ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      <div
+                        className={`relative mt-2 transform origin-top transition-all duration-200 ${
+                          isHostingDropdownOpen
+                            ? 'opacity-100 scale-100 translate-y-0'
+                            : 'opacity-0 scale-95 -translate-y-1 pointer-events-none'
+                        }`}
+                      >
+                        <div className="absolute left-0 right-0 bg-gray-900 border border-gray-700 rounded-lg shadow-xl max-h-64 overflow-y-auto py-2 z-[70]">
+                          {hostingPlanOptions.map((option, index) => (
+                            <button
+                              key={option.value}
+                              type="button"
+                              onClick={() => {
+                                setSelectedHostingPlan(option.value);
+                                setIsHostingDropdownOpen(false);
+                              }}
+                              className={`w-full text-left px-3 py-2 rounded-md text-sm border-t border-gray-700 ${
+                                index === 0 ? 'border-t-0' : ''
+                              } ${
+                                selectedHostingPlan === option.value
+                                  ? 'bg-yellow-100 text-black'
+                                  : 'text-gray-200 hover:bg-gray-800'
+                              }`}
+                            >
+                              {option.label}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                 )}
