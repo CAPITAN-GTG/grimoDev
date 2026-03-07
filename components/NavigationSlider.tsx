@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Home, FolderKanban, User, DollarSign, HelpCircle, Info, Mail, ArrowUpToLine, ArrowDownToLine } from 'lucide-react';
+import { Home, FolderKanban, DollarSign, HelpCircle, Info, Mail, ArrowUpToLine, ArrowDownToLine } from 'lucide-react';
 
 interface NavItem {
   name: string;
@@ -12,10 +12,9 @@ interface NavItem {
 const navItems: NavItem[] = [
   { name: 'Home', href: '#home', icon: Home },
   { name: 'Projects', href: '#projects', icon: FolderKanban },
-  { name: 'Standalone', href: '#standalone', icon: User },
   { name: 'Pricing', href: '#pricing', icon: DollarSign },
   { name: 'FAQ', href: '#faq', icon: HelpCircle },
-  { name: 'Info', href: '#services', icon: Info },
+  { name: 'Services', href: '#services', icon: Info },
   { name: 'Contact', href: '#contact', icon: Mail },
 ];
 

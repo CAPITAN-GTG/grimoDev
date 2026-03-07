@@ -3,12 +3,13 @@ import "./globals.css";
 import NavigationSlider from "@/components/NavigationSlider";
 import MobileNavbar from "@/components/MobileNavbar";
 import Footer from "@/components/Footer";
+import StickyCta from "@/components/StickyCta";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://grimodev.com'),
-  title: "Grimo Dev - Professional Websites, Mobile Apps & Online Presence Solutions",
-  description: "We build websites and mobile apps for small businesses to large corporations. Professional online presence with SEO, GEO, AIO optimization, social media management, and Google Business improvements. Fast delivery, transparent pricing.",
-  keywords: "web development, mobile app development, SEO optimization, GEO optimization, AIO optimization, social media management, Google Business optimization, business websites, ecommerce solutions, professional online presence, small business websites, enterprise applications, website design, app development services",
+  title: "Grimo Dev - Get More Customers with a Modern Website",
+  description: "Fast, mobile-friendly websites for local businesses. SEO, hosting, and maintenance included. Turn visitors into paying clients—no extra fees.",
+  keywords: "small business website, local business website, website for business, SEO included, mobile-friendly website, get more customers, website design, fast website",
   authors: [{ name: "Grimo Dev" }],
   creator: "Grimo Dev",
   publisher: "Grimo Dev",
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://grimodev.com",
     siteName: "Grimo Dev",
-    title: "Grimo Dev - Professional Websites, Mobile Apps & Online Presence",
-    description: "We build websites and mobile apps for small businesses to large corporations. Professional online presence with SEO, GEO, AIO optimization.",
+    title: "Grimo Dev - Get More Customers with a Modern Website",
+    description: "Fast, mobile-friendly websites for local businesses. SEO, hosting, and maintenance included.",
     images: [
       {
         url: "/logo2.jpeg",
@@ -31,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Grimo Dev - Professional Websites, Mobile Apps & Online Presence",
-    description: "We build websites and mobile apps for small businesses to large corporations. Professional online presence with SEO, GEO, AIO optimization.",
+    title: "Grimo Dev - Get More Customers with a Modern Website",
+    description: "Fast, mobile-friendly websites for local businesses. SEO, hosting, and maintenance included.",
     images: ["/logo2.jpeg"],
   },
   alternates: {
@@ -53,6 +54,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Unicase:wght@300;400;500;600;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased" suppressHydrationWarning>
+        <StickyCta />
         <NavigationSlider />
         <MobileNavbar />
         {children}

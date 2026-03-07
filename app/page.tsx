@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
-import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Calendar, Briefcase, ArrowUpRight, ExternalLink, ChevronDown, Info, Search, MapPin, TrendingUp, Share2 } from "lucide-react";
+import { Mail, CheckCircle, Code, Smartphone, Globe, ArrowUpRight, ExternalLink, ChevronDown, Info, Zap, MapPin, TrendingUp } from "lucide-react";
 import toast, { Toaster } from 'react-hot-toast';
 import {
   Carousel,
@@ -22,12 +22,6 @@ if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
 }
 
-interface CallButtonProps {
-  className?: string;
-  variant?: 'primary' | 'secondary';
-}
-
-
 export default function Home() {
   // Projects carousel state
   const [projectsApi, setProjectsApi] = useState<CarouselApi>();
@@ -37,8 +31,6 @@ export default function Home() {
   // Dropdown states - arrays to allow multiple open items
   const [openFaq, setOpenFaq] = useState<number[]>([]);
   const [openHosting, setOpenHosting] = useState<number[]>([]);
-  const [openStandalone, setOpenStandalone] = useState<number[]>([]);
-  const [selectedPackage, setSelectedPackage] = useState<string>('');
   const [selectedReason, setSelectedReason] = useState<string>('');
   const [showHostingOptions, setShowHostingOptions] = useState<boolean>(false);
   const [selectedHostingPlan, setSelectedHostingPlan] = useState<string>('');
@@ -54,10 +46,8 @@ export default function Home() {
   const heroDescriptionRef = useRef<HTMLParagraphElement>(null);
   const heroButtonRef = useRef<HTMLDivElement>(null);
   const professionalTitleRef = useRef<HTMLSpanElement>(null);
-  const businessTitleRef = useRef<HTMLSpanElement>(null);
   const highlightRef = useRef<HTMLSpanElement>(null);
   const projectsSectionRef = useRef<HTMLElement>(null);
-  const standaloneRef = useRef<HTMLElement>(null);
   const pricingRef = useRef<HTMLElement>(null);
   const faqRef = useRef<HTMLElement>(null);
   const servicesRef = useRef<HTMLElement>(null);
@@ -110,17 +100,6 @@ export default function Home() {
             delay: 0.4, // Start after some characters of "PROFESSIONAL" have animated
           }
         );
-      }
-
-      if (businessTitleRef.current) {
-        gsap.set(businessTitleRef.current, { opacity: 1 });
-        const chars = splitTextIntoChars(businessTitleRef.current);
-        gsap.from(chars, {
-          y: 20,
-          autoAlpha: 0,
-          stagger: 0.05,
-          delay: 0.6, // Start after highlight animation
-        });
       }
 
       // Animate hero description
@@ -371,9 +350,6 @@ export default function Home() {
           }
         }
       }
-
-      // Animate Standalone Section
-      createScrollAnimation(standaloneRef, 0.2);
 
       // Animate Pricing Section
       if (pricingRef.current) {
@@ -737,53 +713,39 @@ export default function Home() {
 
 
 
-  // Services we offer
+  // Services we offer — benefits-focused for business owners
   const services = [
-    { icon: Code, title: "Web Development", description: "Custom websites that grow your business" },
-    { icon: Smartphone, title: "Mobile Apps", description: "Native and cross-platform applications" },
-    { icon: Search, title: "SEO Optimization", description: "Rank higher on Google and get found first" },
-    { icon: MapPin, title: "GEO Optimization", description: "Appear in local searches and nearby results" },
-    { icon: TrendingUp, title: "AIO Optimization", description: "Complete optimization across all platforms" },
-    { icon: Share2, title: "Social Media Management", description: "Grow your brand and engage customers" },
+    { icon: Code, title: "Websites that bring in customers", description: "Fast, mobile-friendly sites built to grow your business and turn visitors into leads." },
+    { icon: Zap, title: "Speed & mobile-first", description: "Sites that load quickly and look great on every device—so customers stay and act." },
+    { icon: MapPin, title: "Get found on Google", description: "SEO and local visibility included so nearby customers can find you when they search." },
+    { icon: TrendingUp, title: "Ongoing support", description: "Hosting and updates handled so you can focus on running your business." },
   ];
 
   const faqData = [
     {
-      question: "How long will my site or app take?",
-      answer: "Timeline depends on your package: Standalone sites (1-2 weeks), Starter apps (2-3 weeks), Business apps (3-4 weeks), Enterprise (custom timeline). We always deliver on time."
+      question: "How long until my site is live?",
+      answer: "Depends on the package: simple one-pagers often 1–2 weeks; multi-page sites 2–4 weeks. We’ll give you a clear timeline before you start."
     },
     {
-      question: "What if I don't like the result?",
-      answer: "We offer unlimited revisions until you're completely satisfied. Our 50/50 payment structure means you only pay the final 50% after you approve the completed project."
+      question: "What if I’m not happy with the result?",
+      answer: "We do revisions until you’re satisfied. You pay 50% to start and the rest only after you approve the finished site—so you’re never locked in before you’re happy."
     },
     {
-      question: "What is SEO optimization?",
-      answer: "SEO (Search Engine Optimization) helps your website rank higher on Google. We optimize your content, keywords, and technical elements so customers find you first when searching for your services."
+      question: "What does “SEO included” mean?",
+      answer: "We set up your site so Google can find it and show it to people searching for your services. You get basic SEO built in—no extra fees or jargon."
     },
     {
-      question: "What is GEO optimization?",
-      answer: "GEO optimization ensures your business appears in local search results. We optimize your Google Business Profile, local citations, and location-based content to help nearby customers find you."
+      question: "Can you help with my Google Business listing?",
+      answer: "Yes. On Growth and Pro packages we optimize your Google Business Profile so you show up when customers search for you locally."
     },
     {
-      question: "What is AIO optimization?",
-      answer: "AIO (All-In-One) optimization is our comprehensive service that combines SEO, GEO, social media, and Google Business optimization. We handle everything so you can focus on your business."
+      question: "Do you host my website?",
+      answer: "Yes. Hosting and updates are included in every package so your site stays online, fast, and secure without you managing it."
     },
     {
-      question: "How does social media management work?",
-      answer: "We create and schedule posts, engage with your audience, and grow your following. Regular reporting shows you what's working. Perfect for businesses that want an online presence without the daily work."
+      question: "How does the 50/50 payment work?",
+      answer: "Half upfront starts the project. The other half is due only after you approve the site and we’re ready to launch. No surprises."
     },
-    {
-      question: "Can you help improve my Google Business listing?",
-      answer: "Yes! We optimize your Google Business Profile with accurate info, photos, posts, and reviews. This helps you appear in 'near me' searches and get more customers through your door."
-    },
-    {
-      question: "Do you provide hosting?",
-      answer: "Yes! We offer hosting options or work with your preferred provider. We handle setup and maintenance so your site stays online and secure."
-    },
-    {
-      question: "What's included in the 50/50 payment?",
-      answer: "50% deposit starts your project. The remaining 50% is due after you approve and before launch. This ensures you're happy with the result before final payment."
-    }
   ];
 
   const hostingData = [
@@ -814,52 +776,11 @@ export default function Home() {
     }
   ];
 
-  const standaloneData = [
-    {
-      title: "Portfolio Sites",
-      icon: Briefcase,
-      description: "Simple, fast, and mobile-ready. Showcase your work professionally with a clean, modern design that loads instantly.",
-      features: ["Responsive design", "Fast loading times", "Easy content updates"]
-    },
-    {
-      title: "Event Scheduling Pages",
-      icon: Calendar,
-      description: "Accept appointments or RSVPs without external tools. Built-in booking system that works seamlessly with your schedule.",
-      features: ["Built-in booking system", "Calendar integration", "Email notifications", "Payment processing"]
-    },
-    {
-      title: "Mini Business Pages",
-      icon: Users,
-      description: "Lightweight single-page websites for small services. Perfect for consultants, freelancers, and local businesses.",
-      features: ["Single-page design", "Contact forms", "Service listings", "Mobile optimized"]
-    }
-  ];
-
-  const reasonGroups = [
-    {
-      label: "Standalone Sites ($250)",
-      options: [
-        { value: "portfolio", label: "Portfolio Site" },
-        { value: "event", label: "Event Scheduling Page" },
-        { value: "mini-business", label: "Mini Business Page" },
-      ],
-    },
-    {
-      label: "Business Apps",
-      options: [
-        { value: "business-app-starter", label: "Starter ($750)" },
-        { value: "business-app-business", label: "Business ($1,500)" },
-        { value: "business-app-enterprise", label: "Enterprise (Custom)" },
-      ],
-    },
-    {
-      label: "Online Presence",
-      options: [
-        { value: "online-presence-starter", label: "Starter ($299/month)" },
-        { value: "online-presence-business", label: "Business ($799/month)" },
-        { value: "online-presence-enterprise", label: "Enterprise (Custom/month)" },
-      ],
-    },
+  const packageOptions = [
+    { value: "standalone", label: "Standalone ($250)" },
+    { value: "starter", label: "Starter ($500)" },
+    { value: "growth", label: "Growth ($1,200) — Most Popular" },
+    { value: "pro", label: "Pro ($2,500+)" },
   ];
 
   const hostingPlanOptions = [
@@ -870,13 +791,8 @@ export default function Home() {
   ];
 
   const getReasonLabel = (value: string) => {
-    for (const group of reasonGroups) {
-      const option = group.options.find((opt) => opt.value === value);
-      if (option) {
-        return option.label;
-      }
-    }
-    return "";
+    const option = packageOptions.find((opt) => opt.value === value);
+    return option ? option.label : "";
   };
 
   // Dropdown toggle functions
@@ -896,50 +812,8 @@ export default function Home() {
     );
   };
 
-  const toggleStandalone = (index: number) => {
-    setOpenStandalone(prev => 
-      prev.includes(index) 
-        ? prev.filter(i => i !== index)
-        : [...prev, index]
-    );
-  };
-
-  const handlePackageSelect = (packageName: string) => {
-    setSelectedPackage(packageName);
-
-    let reasonValue = packageName.toLowerCase();
-
-    switch (packageName) {
-      case 'Business App - Starter':
-        reasonValue = 'business-app-starter';
-        break;
-      case 'Business App - Business':
-        reasonValue = 'business-app-business';
-        break;
-      case 'Business App - Enterprise':
-        reasonValue = 'business-app-enterprise';
-        break;
-      case 'Online Presence - Starter':
-        reasonValue = 'online-presence-starter';
-        break;
-      case 'Online Presence - Business':
-        reasonValue = 'online-presence-business';
-        break;
-      case 'Online Presence - Enterprise':
-        reasonValue = 'online-presence-enterprise';
-        break;
-      default:
-        break;
-    }
-
+  const handlePackageSelect = (reasonValue: string) => {
     setSelectedReason(reasonValue);
-    // Scroll to contact form
-    document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
-  };
-
-  const handleStandaloneSelect = (reason: string) => {
-    setSelectedReason(reason);
-    // Don't auto-fill for standalone, just scroll to form
     document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -980,10 +854,13 @@ export default function Home() {
     const formData = new FormData(e.currentTarget);
     const data = {
       name: formData.get('name'),
+      business: formData.get('business'),
       email: formData.get('email'),
+      phone: formData.get('phone'),
       reason: formData.get('reason'),
       hosting: showHostingOptions,
       hostingPlan: formData.get('hosting-plan'),
+      challenge: formData.get('challenge'),
       message: formData.get('message'),
     };
 
@@ -1027,7 +904,6 @@ export default function Home() {
           formRef.current.reset();
         }
         setSelectedReason('');
-        setSelectedPackage('');
         setShowHostingOptions(false);
         setSelectedHostingPlan('');
         setIsServiceDropdownOpen(false);
@@ -1035,7 +911,6 @@ export default function Home() {
         setShowHostingInfo(false);
         setOpenFaq([]);
         setOpenHosting([]);
-        setOpenStandalone([]);
       } else {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to send message');
@@ -1056,43 +931,6 @@ export default function Home() {
     }
   };
 
-  const CallButton = ({ className = "", variant = 'primary' }: CallButtonProps) => {
-    const contactEmail = "grimodev@gmail.com";
-    return (
-      <a 
-        href={`mailto:${contactEmail}`}
-        className={`
-          group
-          relative
-          flex items-center gap-3 sm:gap-4
-          px-4 sm:px-6 md:px-8 py-3 sm:py-4
-          font-semibold
-          text-sm
-          tracking-widest
-          uppercase
-          transition-all duration-300 ease-in-out
-          hover-lift
-          focus-ring
-          ${variant === 'primary' 
-            ? 'bg-black text-white hover:bg-gray-800 hover:text-yellow-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]' 
-            : 'bg-white border-2 border-black text-black hover:bg-black hover:text-yellow-200 transform hover:scale-[1.02]'
-          }
-          ${className}
-        `}
-      >
-        <Mail className="w-4 sm:w-5 h-4 sm:h-5 flex-shrink-0 group-hover:animate-pulse" />
-        <div className="flex flex-col items-start min-w-0">
-          <span className="font-bold text-xs sm:text-sm leading-tight">
-            {contactEmail}
-          </span>
-          <span className="text-xs opacity-80 tracking-wider whitespace-nowrap">
-            START FREE CONSULTATION — NO COMMITMENT
-          </span>
-        </div>
-      </a>
-    );
-  };
-
   return (
     <main className="min-h-screen bg-white">
      {/* Hero Section */}
@@ -1109,18 +947,20 @@ export default function Home() {
         <HeroHighlight className="py-12 sm:py-16 md:py-20 lg:py-24 z-10 w-full">
           <div> 
             <h1 ref={heroTitleRef} className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-heading mb-4 sm:mb-6 md:mb-8 text-center text-black leading-tight px-4">
-              <span id="heading" ref={professionalTitleRef}>PROFESSIONAL</span>{' '}
-              <Highlight ref={highlightRef} className="bg-yellow-200 text-black">ONLINE PRESENCE</Highlight>{' '}
-              <br className="hidden md:block" />
-              <span id="heading2" ref={businessTitleRef}>FOR YOUR BUSINESS</span>
+              <span id="heading" ref={professionalTitleRef}>Get More Customers</span>{' '}
+              <Highlight ref={highlightRef} className="bg-yellow-200 text-black">with a Modern Website</Highlight>
             </h1>
             <p ref={heroDescriptionRef} className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 md:mb-10 lg:mb-12 max-w-4xl mx-auto text-gray-700 leading-relaxed font-normal tracking-wide px-4 sm:px-6 text-center">
-              We build websites, mobile apps, and optimize your online presence. SEO, GEO, AIO, social media, and Google Business management. From small businesses to large corporations.
+              I build fast, mobile-friendly websites for local businesses that turn visitors into paying clients. SEO, hosting, and maintenance are included—no extra fees.
             </p>
             <div ref={heroButtonRef} className="flex flex-col items-center space-y-4 sm:space-y-5 md:space-y-6 lg:space-y-8 px-4">
-              <div className="flex items-center justify-center w-full max-w-md sm:max-w-lg mx-auto">
-                <CallButton className="w-full sm:w-auto" />
-              </div>
+              <a
+                href="#contact"
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-black text-white px-8 py-4 font-semibold text-sm sm:text-base tracking-widest uppercase transition-all duration-300 hover:bg-gray-800 hover:text-yellow-200 shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+              >
+                <Mail className="w-5 h-5" />
+                Get Your Free Demo
+              </a>
               <p className="text-gray-500 max-w-md text-xs sm:text-sm tracking-wider uppercase font-semibold text-center px-2">
                 50% TO START • 50% AFTER SATISFACTION • FAST RESPONSE TIME
               </p>
@@ -1189,12 +1029,16 @@ export default function Home() {
                          </h3>
                              
                          {/* Category Badge - Sharp */}
-                         <div className="mb-6 sm:mb-8 relative z-10">
+                         <div className="mb-3 relative z-10">
                            <span className="inline-flex items-center px-3 sm:px-4 py-1.5 sm:py-2 bg-white/5 text-white/70 text-xs sm:text-sm font-normal tracking-wider uppercase border border-white/10 group-hover:bg-white/10 group-hover:text-white/90 group-hover:border-white/30 transition-all duration-300">
                              {project.category}
                            </span>
                          </div>
-                       
+                         {project.result && (
+                           <p className="text-sm text-yellow-200/90 mb-4 relative z-10 font-normal">
+                             {project.result}
+                           </p>
+                         )}
                          {/* Visit Site Button - Sharp Design */}
                          <div className="mt-auto relative z-10">
                            <a
@@ -1244,87 +1088,7 @@ export default function Home() {
          </div>
        </section>
 
-       {/* Standalone Sites Section */}
-       <section id="standalone" ref={standaloneRef} className="py-24 bg-gray-50">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="text-center mb-16">
-             <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
-               <span>STANDALONE SITES</span>
-             </div>
-             <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
-               FOR INDIVIDUALS & CREATORS
-             </h2>
-             <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide leading-relaxed mb-8 font-normal">
-               Perfect for personal projects, small portfolios, event scheduling, and more.
-             </p>
-             <div className="inline-flex items-center gap-2 bg-yellow-100 px-6 py-3 rounded-full mb-8">
-               <span className="text-black font-normal text-2xl">$250</span>
-               <span className="text-black font-normal text-lg">flat rate</span>
-             </div>
-             <p className="text-lg text-gray-700 max-w-4xl mx-auto leading-relaxed font-normal">
-               Ideal for freelancers, photographers, coaches, and anyone needing a clean, functional site without heavy maintenance.
-             </p>
-           </div>
-
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-12">
-             {standaloneData.map((item, index) => {
-               const IconComponent = item.icon;
-               const isOpen = openStandalone.includes(index);
-               
-               return (
-                 <div key={index} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden">
-                   <button
-                     onClick={() => toggleStandalone(index)}
-                     className="w-full p-6 text-left hover:bg-gray-50 transition-all duration-300 ease-in-out flex items-center justify-between"
-                   >
-                     <div className="flex items-center gap-4">
-                       <div className="w-12 h-12 bg-black rounded-lg flex items-center justify-center">
-                         <IconComponent className="w-6 h-6 text-white" />
-                       </div>
-                       <div>
-                         <h3 className="text-lg font-normal text-black">{item.title}</h3>
-                         <p className="text-sm text-gray-600 font-normal">$250 flat rate</p>
-                       </div>
-                     </div>
-                     <div className="flex items-center gap-1 text-sm font-normal text-black bg-yellow-100 px-2 py-1 rounded-full transition-all duration-300 ease-in-out hover:bg-yellow-200">
-                       <Info className="w-3 h-3" />
-                       <span className="hidden sm:inline">{isOpen ? 'Less' : 'More'}</span>
-                     </div>
-                   </button>
-                   
-                   <div className={`overflow-hidden transition-all duration-300 ${
-                     isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
-                   }`}>
-                     <div className="px-6 pb-6">
-                       <p className="text-gray-600 text-sm leading-relaxed mb-4 font-normal">
-                         {item.description}
-                       </p>
-                       <ul className="space-y-2">
-                         {item.features.map((feature, featureIndex) => (
-                           <li key={featureIndex} className="flex items-center gap-2 text-sm text-gray-600">
-                             <CheckCircle size={14} className="text-black flex-shrink-0" />
-                             <span className="font-normal">{feature}</span>
-                           </li>
-                         ))}
-                       </ul>
-                     </div>
-                   </div>
-                 </div>
-               );
-             })}
-           </div>
-
-           <div className="text-center">
-             <a href="#contact" onClick={() => handleStandaloneSelect('standalone')} className="inline-flex items-center gap-2 bg-black text-white px-6 py-3 font-normal text-sm sm:text-lg tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-105">
-               <span className="hidden sm:inline">Build My Standalone Site</span>
-               <span className="sm:hidden">Build Site</span>
-               <ArrowUpRight className="w-4 h-4 sm:w-5 sm:h-5" />
-             </a>
-           </div>
-         </div>
-       </section>
       <section id="pricing" ref={pricingRef} className="py-24 bg-white relative overflow-hidden">
-        {/* Pattern Background */}
         <div 
           className="absolute inset-0 z-0 opacity-5"
           style={{
@@ -1341,122 +1105,87 @@ export default function Home() {
             <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
               SIMPLE, TRANSPARENT PRICING
             </h2>
-            <p className="text-xl text-gray-600 max-w-4xl mx-auto tracking-wide leading-relaxed mb-4 font-normal">
-              Three service categories. Choose what fits your needs. 50% to start, 50% after satisfaction.
+            <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide leading-relaxed mb-4 font-normal">
+              From a simple one-pager to a full lead-generation site. No hidden fees. 50% to start, 50% after you&apos;re happy.
             </p>
           </div>
 
-          {/* Business Apps Pricing */}
-          <div className="mb-20">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-4xl font-heading text-black mb-4">Business Apps</h3>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">Mobile & web applications for businesses</p>
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 lg:gap-8 mb-16">
+            {/* Standalone — $250 */}
+            <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+              <h4 className="text-2xl font-normal text-black mb-4">Standalone</h4>
+              <div className="text-4xl font-normal text-black mb-6">$250</div>
+              <ul className="space-y-3 mb-8 flex-grow">
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">1-page site, simple functionality</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Mobile-friendly & fast</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Hosting $10/mo (no changes)</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">$50/mo for maintenance & small changes</span></li>
+              </ul>
+              <a href="#contact" onClick={() => handlePackageSelect('standalone')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                Get Your Free Demo
+              </a>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
-                <h4 className="text-2xl font-normal text-black mb-4">Starter</h4>
-                <div className="text-4xl font-normal text-black mb-6">$750</div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Simple web app</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">2-3 weeks delivery</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Mobile responsive</span></li>
-                </ul>
-                <a href="#contact" onClick={() => handlePackageSelect('Business App - Starter')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
-                  Get Started
-                </a>
-              </div>
 
-              <div className="bg-black text-white p-8 flex flex-col hover:shadow-2xl transition-all duration-300">
-                <div className="inline-flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full mb-4 w-fit">
-                  <span className="text-black font-normal text-xs">POPULAR</span>
-                </div>
-                <h4 className="text-2xl font-normal mb-4">Business</h4>
-                <div className="text-4xl font-normal mb-6">$1,500</div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Full-featured app</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">3-4 weeks delivery</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Custom features</span></li>
-                </ul>
-                <a href="#contact" onClick={() => handlePackageSelect('Business App - Business')} className="block w-full text-center py-3 bg-white text-black font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-100 rounded-lg transform hover:scale-[1.02]">
-                  Get Started
-                </a>
-              </div>
-
-              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
-                <h4 className="text-2xl font-normal text-black mb-4">Enterprise</h4>
-                <div className="text-4xl font-normal text-black mb-6">Custom</div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Complex solutions</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Scalable architecture</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Ongoing support</span></li>
-                </ul>
-                <a href="#contact" onClick={() => handlePackageSelect('Business App - Enterprise')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
-                  Contact Us
-                </a>
-              </div>
+            {/* Starter — $500 */}
+            <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+              <h4 className="text-2xl font-normal text-black mb-4">Starter</h4>
+              <div className="text-4xl font-normal text-black mb-6">$500</div>
+              <ul className="space-y-3 mb-8 flex-grow">
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Up to 3 pages</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Mobile-friendly & fast</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">SEO included</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Contact form</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Hosting & updates</span></li>
+              </ul>
+              <a href="#contact" onClick={() => handlePackageSelect('starter')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                Get Your Free Demo
+              </a>
             </div>
-          </div>
 
-          {/* Online Presence Pricing */}
-          <div className="mb-20">
-            <div className="text-center mb-12">
-              <h3 className="text-3xl md:text-4xl font-heading text-black mb-4">Online Presence</h3>
-              <p className="text-lg text-gray-600 max-w-2xl mx-auto">SEO, GEO, AIO, Social Media & Google Business</p>
+            {/* Growth — $1,200 (Most Popular) */}
+            <div className="bg-black text-white p-8 flex flex-col hover:shadow-2xl transition-all duration-300 relative">
+              <div className="inline-flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full mb-4 w-fit">
+                <span className="text-black font-normal text-xs">MOST POPULAR</span>
+              </div>
+              <h4 className="text-2xl font-normal mb-4">Growth</h4>
+              <div className="text-4xl font-normal mb-6">$1,200</div>
+              <ul className="space-y-3 mb-8 flex-grow">
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Up to 5 pages</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Mobile-friendly & fast</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">SEO included</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Google Business optimization</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Contact & quote forms</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Hosting & updates</span></li>
+              </ul>
+              <a href="#contact" onClick={() => handlePackageSelect('growth')} className="block w-full text-center py-3 bg-white text-black font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-100 rounded-lg transform hover:scale-[1.02]">
+                Get Your Free Demo
+              </a>
             </div>
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8">
-              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
-                <h4 className="text-2xl font-normal text-black mb-4">Starter</h4>
-                <div className="text-4xl font-normal text-black mb-2">$299</div>
-                <div className="text-sm text-gray-600 mb-6">/month</div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Basic SEO setup</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Google Business optimization</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Monthly reports</span></li>
-                </ul>
-                <a href="#contact" onClick={() => handlePackageSelect('Online Presence - Starter')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
-                  Get Started
-                </a>
-              </div>
 
-              <div className="bg-black text-white p-8 flex flex-col hover:shadow-2xl transition-all duration-300">
-                <div className="inline-flex items-center gap-2 bg-yellow-100 px-3 py-1 rounded-full mb-4 w-fit">
-                  <span className="text-black font-normal text-xs">POPULAR</span>
-                </div>
-                <h4 className="text-2xl font-normal mb-4">Business</h4>
-                <div className="text-4xl font-normal mb-2">$799</div>
-                <div className="text-sm text-gray-300 mb-6">/month</div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Advanced SEO & GEO</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Social media management</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Content creation</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-yellow-200 flex-shrink-0 mt-1" /><span className="text-sm text-gray-200 font-normal">Weekly optimization</span></li>
-                </ul>
-                <a href="#contact" onClick={() => handlePackageSelect('Online Presence - Business')} className="block w-full text-center py-3 bg-white text-black font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-100 rounded-lg transform hover:scale-[1.02]">
-                  Get Started
-                </a>
-              </div>
-
-              <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
-                <h4 className="text-2xl font-normal text-black mb-4">Enterprise</h4>
-                <div className="text-4xl font-normal text-black mb-2">Custom</div>
-                <div className="text-sm text-gray-600 mb-6">/month</div>
-                <ul className="space-y-3 mb-8 flex-grow">
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Full AIO optimization</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Dedicated account manager</span></li>
-                  <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Multi-platform management</span></li>
-                </ul>
-                <a href="#contact" onClick={() => handlePackageSelect('Online Presence - Enterprise')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
-                  Contact Us
-                </a>
-              </div>
+            {/* Pro — $2,500+ */}
+            <div className="bg-white border-2 border-gray-200 p-8 flex flex-col hover:border-black hover:shadow-xl transition-all duration-300">
+              <h4 className="text-2xl font-normal text-black mb-4">Pro</h4>
+              <div className="text-4xl font-normal text-black mb-6">$2,500+</div>
+              <ul className="space-y-3 mb-8 flex-grow">
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Multi-page site</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Lead generation system</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Mobile-friendly & fast</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">SEO included</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Google Business setup + booking system</span></li>
+                <li className="flex items-start gap-3"><CheckCircle size={18} className="text-black flex-shrink-0 mt-1" /><span className="text-sm text-gray-700 font-normal">Hosting & updates</span></li>
+              </ul>
+              <a href="#contact" onClick={() => handlePackageSelect('pro')} className="block w-full text-center py-3 bg-black text-white font-normal text-sm tracking-widest uppercase transition-all duration-300 ease-in-out hover:bg-gray-800 hover:text-yellow-200 rounded-lg transform hover:scale-[1.02]">
+                Schedule Your Free Demo
+              </a>
             </div>
           </div>
 
           <div className="text-center">
-            <p className="text-gray-600 text-lg mb-4">
-              Standalone sites start at <strong>$250</strong> - See <a href="#standalone" className="text-black underline hover:text-gray-600">Standalone section</a> for details.
-            </p>
-            <p className="text-sm text-gray-500">
+            <a href="#contact" className="inline-flex items-center gap-2 bg-yellow-100 text-black px-8 py-4 font-semibold text-base tracking-widest uppercase transition-all duration-300 hover:bg-yellow-200 rounded-lg transform hover:scale-[1.02]">
+              <Mail className="w-5 h-5" />
+              Schedule Your Free Demo
+            </a>
+            <p className="text-sm text-gray-500 mt-6">
               50% deposit to start • 50% after satisfaction • All prices subject to project scope
             </p>
           </div>
@@ -1544,10 +1273,10 @@ export default function Home() {
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
           <div className="text-center mb-10 md:mb-12">
             <div className="inline-flex items-center space-x-3 border border-white/30 px-6 py-2 text-white text-sm font-normal tracking-widest mb-4 backdrop-blur-sm">
-              <span>WHAT WE DO</span>
+              <span>WHAT YOU GET</span>
             </div>
             <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto tracking-wide leading-relaxed font-normal">
-              Professional online presence solutions. Websites, mobile apps, SEO, GEO, and AIO optimization.
+              Websites built for business growth: fast, mobile-friendly, and easy for customers to find you.
             </p>
           </div>
 
@@ -1596,12 +1325,11 @@ export default function Home() {
             </div>
             
             <h2 className="text-4xl md:text-6xl font-heading mb-8 tracking-tight">
-              READY TO BUILD YOUR
-              <span className="block text-gray-300">DIGITAL SOLUTION?</span>
+              READY TO GET MORE CUSTOMERS?
             </h2>
             
             <p className="text-xl text-gray-300 mb-16 max-w-3xl mx-auto leading-relaxed tracking-wide font-normal">
-              Get your free consultation today. We deliver fast, work around your business needs, and provide flexible pricing with premium quality results.
+              Get your free demo today. No commitment—just a quick chat about your business and how a better website can help.
             </p>
             
             {/* Enhanced Contact Form */}
@@ -1622,6 +1350,18 @@ export default function Home() {
                     />
                   </div>
                   <div>
+                    <label htmlFor="business" className="block text-sm font-normal text-gray-300 mb-2 text-left">
+                      Business
+                    </label>
+                    <input
+                      type="text"
+                      id="business"
+                      name="business"
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
+                      placeholder="Your business name"
+                    />
+                  </div>
+                  <div>
                     <label htmlFor="email" className="block text-sm font-normal text-gray-300 mb-2 text-left">
                       Email *
                     </label>
@@ -1634,11 +1374,23 @@ export default function Home() {
                       placeholder="your@email.com"
                     />
                   </div>
+                  <div>
+                    <label htmlFor="phone" className="block text-sm font-normal text-gray-300 mb-2 text-left">
+                      Phone
+                    </label>
+                    <input
+                      type="tel"
+                      id="phone"
+                      name="phone"
+                      className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
+                      placeholder="(555) 123-4567"
+                    />
+                  </div>
                 </div>
                 
                 <div className="relative">
                   <label htmlFor="reason" className="block text-sm font-normal text-gray-300 mb-2 text-left">
-                    What are you looking for? *
+                    Which package interests you? *
                   </label>
                   <input type="hidden" id="reason" name="reason" value={selectedReason} />
                   <button
@@ -1663,32 +1415,22 @@ export default function Home() {
                     }`}
                   >
                     <div className="max-h-64 overflow-y-auto py-2">
-                      {reasonGroups.map((group, groupIndex) => (
-                        <div
-                          key={group.label}
-                          className={`px-4 pb-2 ${groupIndex !== 0 ? 'border-t border-gray-800 pt-2' : ''}`}
+                      {packageOptions.map((option) => (
+                        <button
+                          key={option.value}
+                          type="button"
+                          onClick={() => {
+                            setSelectedReason(option.value);
+                            setIsServiceDropdownOpen(false);
+                          }}
+                          className={`w-full text-left px-3 py-2 rounded-md text-sm ${
+                            selectedReason === option.value
+                              ? 'bg-yellow-100 text-black'
+                              : 'text-gray-200 hover:bg-gray-800'
+                          }`}
                         >
-                          <div className="text-xs uppercase tracking-widest text-gray-400 mb-1 text-left">
-                            {group.label}
-                          </div>
-                          {group.options.map((option) => (
-                            <button
-                              key={option.value}
-                              type="button"
-                              onClick={() => {
-                                setSelectedReason(option.value);
-                                setIsServiceDropdownOpen(false);
-                              }}
-                              className={`w-full text-left px-3 py-2 rounded-md text-sm ${
-                                selectedReason === option.value
-                                  ? 'bg-yellow-100 text-black'
-                                  : 'text-gray-200 hover:bg-gray-800'
-                              }`}
-                            >
-                              {option.label}
-                            </button>
-                          ))}
-                        </div>
+                          {option.label}
+                        </button>
                       ))}
                     </div>
                   </div>
@@ -1789,6 +1531,18 @@ export default function Home() {
                 )}
 
                 <div>
+                  <label htmlFor="challenge" className="block text-sm font-normal text-gray-300 mb-2 text-left">
+                    What&apos;s your biggest website challenge?
+                  </label>
+                  <input
+                    type="text"
+                    id="challenge"
+                    name="challenge"
+                    className="w-full px-4 py-3 bg-gray-800 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-yellow-200 focus:border-transparent"
+                    placeholder="e.g. Not enough leads, slow site, hard to update..."
+                  />
+                </div>
+                <div>
                   <label htmlFor="message" className="block text-sm font-normal text-gray-300 mb-2 text-left">
                     Message *
                   </label>
@@ -1814,15 +1568,6 @@ export default function Home() {
               </form>
             </div>
             
-            <div className="flex flex-col items-center space-y-12">
-              <div className="flex items-center">
-                <CallButton />
-              </div>
-              
-              <p className="text-gray-500 max-w-lg text-sm tracking-widest uppercase font-normal">
-                WEBSITES • MOBILE APPS • SEO • GEO • AIO • SOCIAL MEDIA • GOOGLE BUSINESS • FAST DELIVERY
-              </p>
-            </div>
           </div>
         </div>
       </section>

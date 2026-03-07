@@ -4,7 +4,7 @@ import nodemailer from 'nodemailer';
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { name, email, reason, hosting, hostingPlan, message } = body;
+    const { name, business, email, phone, reason, hosting, hostingPlan, challenge, message } = body;
 
     // Validate required fields
     if (!name || !email || !reason || !message) {
@@ -26,13 +26,10 @@ export async function POST(request: NextRequest) {
     // Format reason for display
     const formatReason = (reason: string) => {
       const reasonMap: { [key: string]: string } = {
-        'starter': 'Starter Package ($750)',
-        'business': 'Business Package ($1200)',
-        'pro': 'Pro Package ($2500)',
-        'portfolio': 'Portfolio Site',
-        'event': 'Event Scheduling Page',
-        'mini-business': 'Mini Business Page',
-        'standalone': 'Standalone Site'
+        'standalone': 'Standalone ($250)',
+        'starter': 'Starter ($500)',
+        'growth': 'Growth ($1,200)',
+        'pro': 'Pro ($2,500+)',
       };
       return reasonMap[reason] || reason;
     };
@@ -92,6 +89,14 @@ export async function POST(request: NextRequest) {
                                             </tr>
                                             <tr>
                                                 <td style="width: 120px; padding: 12px 0; font-weight: 600; color: #000000; font-size: 14px;">
+                                                    Business:
+                                                </td>
+                                                <td style="padding: 12px 0; color: #333333; font-size: 14px;">
+                                                    ${business || '—'}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 120px; padding: 12px 0; font-weight: 600; color: #000000; font-size: 14px;">
                                                     Email:
                                                 </td>
                                                 <td style="padding: 12px 0; color: #333333; font-size: 14px;">
@@ -100,12 +105,30 @@ export async function POST(request: NextRequest) {
                                             </tr>
                                             <tr>
                                                 <td style="width: 120px; padding: 12px 0; font-weight: 600; color: #000000; font-size: 14px;">
-                                                    Service:
+                                                    Phone:
+                                                </td>
+                                                <td style="padding: 12px 0; color: #333333; font-size: 14px;">
+                                                    ${phone || '—'}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="width: 120px; padding: 12px 0; font-weight: 600; color: #000000; font-size: 14px;">
+                                                    Package:
                                                 </td>
                                                 <td style="padding: 12px 0; color: #333333; font-size: 14px;">
                                                     ${formatReason(reason)}
                                                 </td>
                                             </tr>
+                                            ${challenge ? `
+                                            <tr>
+                                                <td style="width: 120px; padding: 12px 0; font-weight: 600; color: #000000; font-size: 14px;">
+                                                    Biggest challenge:
+                                                </td>
+                                                <td style="padding: 12px 0; color: #333333; font-size: 14px;">
+                                                    ${challenge}
+                                                </td>
+                                            </tr>
+                                            ` : ''}
                                         </table>
                                     </td>
                                 </tr>
@@ -194,8 +217,11 @@ New Contact Form Submission - GRIMO DEV
 
 Contact Details:
 Name: ${name}
+Business: ${business || '—'}
 Email: ${email}
-Service: ${formatReason(reason)}
+Phone: ${phone || '—'}
+Package: ${formatReason(reason)}
+${challenge ? `Biggest challenge: ${challenge}\n` : ''}
 ${hosting ? `Hosting Interest: Yes\nHosting Plan: ${hostingPlan || 'Not specified'}` : 'Hosting Interest: No'}
 
 Message:

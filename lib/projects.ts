@@ -5,6 +5,8 @@ export interface Project {
   description: string;
   category: string;
   image?: string;
+  /** Optional result achieved, e.g. "Increased leads by 40%" */
+  result?: string;
 }
 
 export const projects: Project[] = [
@@ -15,6 +17,7 @@ export const projects: Project[] = [
     description: "Creative studio portfolio showcasing artistic work and services",
     category: "Studio",
     image: "/yatusabesstudio.webp",
+    result: "Increased booking rates",
   },
   {
     id: "2",
@@ -23,6 +26,7 @@ export const projects: Project[] = [
     description: "Professional construction company website with project galleries and contact forms",
     category: "Construction",
     image: "/tga-builders.webp",
+    result: "More quote requests from Google",
   },
   {
     id: "3",
@@ -31,6 +35,7 @@ export const projects: Project[] = [
     description: "Modern web application built with cutting-edge technology",
     category: "Blog",
     image: "/losavamos.webp",
+    result: "Stronger reach and reader engagement",
   },
   {
     id: "4",
@@ -39,13 +44,16 @@ export const projects: Project[] = [
     description: "E-commerce platform for premium headwear with shopping cart functionality",
     category: "Wholesale",
     image: "/lunar-headwear.webp",
-  },{
-    id: "5", 
+    result: "More wholesale orders and easier reorders",
+  },
+  {
+    id: "5",
     name: "TGA Handyman",
     url: "https://www.tgahandymanservices.com/",
     description: "Local handyman service website featuring services, pricing, and booking system",
     category: "Home Services",
     image: "/handyman-services.webp",
+    result: "More job requests from local search",
   },
   {
     id: "6",
@@ -54,6 +62,7 @@ export const projects: Project[] = [
     description: "Custom t-shirt printing service with design tools and order management",
     category: "Screen Printing",
     image: "/teestogo.webp",
+    result: "More custom orders and quote requests",
   },
   {
     id: "7",
@@ -62,6 +71,7 @@ export const projects: Project[] = [
     description: "the online presence of Agentur :kunstgerecht, presenting Simone Henke’s agency",
     category: "Agency",
     image: "/simone-henke.webp",
+    result: "More client inquiries and project bookings",
   },
   {
     id: "8",
@@ -70,5 +80,6 @@ export const projects: Project[] = [
     description: "Wholesale performance hats for decorators, printers, and brands. Decoration-ready, sweat-resistant, fast shipping.",
     category: "Wholesale",
     image: "/avhats.png",
+    result: "More dealer and B2B inquiries",
   },
 ];
