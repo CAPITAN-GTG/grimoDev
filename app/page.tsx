@@ -3,7 +3,7 @@
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
-import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Calendar, Briefcase, ArrowUpRight, ExternalLink, ChevronDown, Info, ShoppingCart, Search, MapPin, TrendingUp, Share2 } from "lucide-react";
+import { Mail, CheckCircle, Code, Smartphone, Zap, Shield, Globe, Layers, Star, Users, Calendar, Briefcase, ArrowUpRight, ExternalLink, ChevronDown, Info, Search, MapPin, TrendingUp, Share2 } from "lucide-react";
 import toast, { Toaster } from 'react-hot-toast';
 import {
   Carousel,
@@ -57,7 +57,6 @@ export default function Home() {
   const businessTitleRef = useRef<HTMLSpanElement>(null);
   const highlightRef = useRef<HTMLSpanElement>(null);
   const projectsSectionRef = useRef<HTMLElement>(null);
-  const clientResultsRef = useRef<HTMLElement>(null);
   const standaloneRef = useRef<HTMLElement>(null);
   const pricingRef = useRef<HTMLElement>(null);
   const faqRef = useRef<HTMLElement>(null);
@@ -372,9 +371,6 @@ export default function Home() {
           }
         }
       }
-
-      // Animate Client Results Section
-      createScrollAnimation(clientResultsRef, 0.2);
 
       // Animate Standalone Section
       createScrollAnimation(standaloneRef, 0.2);
@@ -740,31 +736,6 @@ export default function Home() {
   }, [projectsApi]);
 
 
-
-  // Client results data
-  const clientResults = [
-    {
-      project: "Professional Online Presence",
-      metric: "Modern Website",
-      description: "Professional and modern designs that look stunning across all devices. We create responsive websites that provide an exceptional user experience on desktop, tablet, and mobile, ensuring your brand stands out with clean, contemporary aesthetics.",
-      icon: Globe,
-      image: "/modern-website.webp"
-    },
-    {
-      project: "E-commerce Success",
-      metric: "Custom Solutions",
-      description: "Turn visitors into customers with smart e-commerce features. We make online selling simple and profitable.",
-      icon: ShoppingCart,
-      image: "/e-commerce.webp"
-    },
-    {
-      project: "Streamlined Operations",
-      metric: "Booking Systems",
-      description: "Stop juggling phone calls and emails. Let customers book appointments online 24/7 while you focus on growing your business.",
-      icon: Calendar,
-      image: "/booking.webp"
-    }
-  ];
 
   // Services we offer
   const services = [
@@ -1269,60 +1240,6 @@ export default function Home() {
                  {projectsCurrent} / {projectsCount}
                </div>
              </div>
-           </div>
-         </div>
-       </section>
-
-       {/* Client Results Section */}
-       <section id="client-results" ref={clientResultsRef} className="py-24 bg-white relative overflow-hidden">
-         {/* Pattern Background */}
-         <div 
-           className="absolute inset-0 z-0 opacity-5"
-           style={{
-             backgroundImage: 'url(/pattern3.jpg)',
-             backgroundRepeat: 'repeat',
-             backgroundSize: 'auto',
-           }}
-         />
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-           <div className="text-center mb-16">
-             <div className="inline-flex items-center space-x-3 bg-black px-6 py-2 text-white text-sm font-normal tracking-widest mb-6">
-               <span>CLIENT RESULTS</span>
-             </div>
-             <h2 className="text-4xl md:text-6xl font-heading text-black mb-6 tracking-tight">
-               PROVEN RESULTS
-             </h2>
-             <p className="text-xl text-gray-600 max-w-3xl mx-auto tracking-wide leading-relaxed font-normal">
-               Real results from real businesses. See how we help companies like yours grow and succeed online.
-             </p>
-           </div>
-
-           {/* Results Grid */}
-           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 lg:gap-8 mb-16">
-             {clientResults.map((result, index) => (
-                 <div key={index} className="bg-white rounded-xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-shadow duration-300">
-                   {/* Image Section */}
-                   <div className="relative w-full h-48 overflow-hidden bg-gray-100">
-                     <Image
-                       src={result.image || ""}
-                       alt={result.metric}
-                       fill
-                       className="object-cover"
-                       sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                     />
-                     <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent"></div>
-                     <div className="absolute top-4 right-4 inline-flex items-center justify-center w-12 h-12 bg-black rounded-full">
-                       <result.icon className="w-6 h-6 text-white" />
-                     </div>
-                   </div>
-                   {/* Content Section */}
-                   <div className="p-6">
-                     <h3 className="text-2xl font-normal text-black mb-2">{result.metric}</h3>
-                     <p className="text-gray-700 font-normal mb-3 text-sm">{result.project}</p>
-                     <p className="text-gray-600 text-sm leading-relaxed font-normal">{result.description}</p>
-                   </div>
-                 </div>
-             ))}
            </div>
          </div>
        </section>

@@ -63,4 +63,12 @@ export const projects: Project[] = [
     category: "Agency",
     image: "/simone-henke.webp",
   },
+  {
+    id: "8",
+    name: "AvHatco",
+    url: "https://avhatco.com/",
+    description: "Wholesale performance hats for decorators, printers, and brands. Decoration-ready, sweat-resistant, fast shipping.",
+    category: "Wholesale",
+    image: "/avhats.png",
+  },
 ];
