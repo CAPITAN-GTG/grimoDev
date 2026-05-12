@@ -24,7 +24,7 @@ const Footer = () => {
             className="inline-flex items-center gap-2 bg-yellow-100 text-black px-6 py-4 font-semibold text-sm tracking-widest uppercase transition-all duration-200 hover:bg-yellow-200 mb-8"
           >
             <Mail className="w-5 h-5" />
-            Get Your Free Demo
+            Reach out
           </Link>
 
           {/* Copyright */}

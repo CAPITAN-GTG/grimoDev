@@ -7,9 +7,9 @@ import StickyCta from "@/components/StickyCta";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://grimodev.com'),
-  title: "Grimo Dev - Get More Customers with a Modern Website",
-  description: "Fast, mobile-friendly websites for local businesses. SEO, hosting, and maintenance included. Turn visitors into paying clients—no extra fees.",
-  keywords: "small business website, local business website, website for business, SEO included, mobile-friendly website, get more customers, website design, fast website",
+  title: "Grimo Dev — Websites, Meta & Google Ads, Social Media",
+  description: "Custom websites, paid ads on Meta and Google, and social media retainers. Clear pricing and a simple way to reach out.",
+  keywords: "small business website, Meta ads, Google ads, social media management, website design, local business marketing",
   authors: [{ name: "Grimo Dev" }],
   creator: "Grimo Dev",
   publisher: "Grimo Dev",
@@ -19,8 +19,8 @@ export const metadata: Metadata = {
     locale: "en_US",
     url: "https://grimodev.com",
     siteName: "Grimo Dev",
-    title: "Grimo Dev - Get More Customers with a Modern Website",
-    description: "Fast, mobile-friendly websites for local businesses. SEO, hosting, and maintenance included.",
+    title: "Grimo Dev — Websites, Meta & Google Ads, Social Media",
+    description: "Custom websites, paid ads, and social content. Clear tiers and fast replies.",
     images: [
       {
         url: "/logo2.jpeg",
@@ -32,8 +32,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Grimo Dev - Get More Customers with a Modern Website",
-    description: "Fast, mobile-friendly websites for local businesses. SEO, hosting, and maintenance included.",
+    title: "Grimo Dev — Websites, Meta & Google Ads, Social Media",
+    description: "Custom websites, paid ads, and social content. Clear tiers and fast replies.",
     images: ["/logo2.jpeg"],
   },
   alternates: {
@@ -66,7 +66,7 @@ export default function RootLayout({
               "@context": "https://schema.org",
               "@type": "LocalBusiness",
               "name": "Grimo Dev",
-              "description": "Professional web development, mobile app development, and online presence optimization services",
+              "description": "Websites, Meta and Google advertising, and social media content for growing businesses",
               "url": "https://grimodev.com",
               "logo": "https://grimodev.com/logo2.jpeg",
               "email": "grimodev@gmail.com",
@@ -76,62 +76,30 @@ export default function RootLayout({
               },
               "hasOfferCatalog": {
                 "@type": "OfferCatalog",
-                "name": "Web Development Services",
+                "name": "Grimo Dev services",
                 "itemListElement": [
                   {
                     "@type": "Offer",
                     "itemOffered": {
                       "@type": "Service",
-                      "name": "Web Development",
-                      "description": "Custom website development for businesses"
+                      "name": "Websites",
+                      "description": "Custom websites from starter builds through large-scale sites"
                     }
                   },
                   {
                     "@type": "Offer",
                     "itemOffered": {
                       "@type": "Service",
-                      "name": "Mobile App Development",
-                      "description": "Native and cross-platform mobile applications"
+                      "name": "Meta and Google Ads",
+                      "description": "Paid advertising set-up and optional monthly maintenance"
                     }
                   },
                   {
                     "@type": "Offer",
                     "itemOffered": {
                       "@type": "Service",
-                      "name": "SEO Optimization",
-                      "description": "Search engine optimization services"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "GEO Optimization",
-                      "description": "Geographic/local search optimization"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "AIO Optimization",
-                      "description": "All-in-one optimization services"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Social Media Management",
-                      "description": "Social media management and strategy"
-                    }
-                  },
-                  {
-                    "@type": "Offer",
-                    "itemOffered": {
-                      "@type": "Service",
-                      "name": "Google Business Optimization",
-                      "description": "Google Business Profile optimization and management"
+                      "name": "Social media",
+                      "description": "Scheduled posts and content retainers by monthly tier"
                     }
                   }
                 ]

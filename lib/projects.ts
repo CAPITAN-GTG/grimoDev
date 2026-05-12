@@ -74,12 +74,12 @@ export const projects: Project[] = [
     result: "More client inquiries and project bookings",
   },
   {
-    id: "8",
-    name: "AvHatco",
-    url: "https://avhatco.com/",
-    description: "Wholesale performance hats for decorators, printers, and brands. Decoration-ready, sweat-resistant, fast shipping.",
-    category: "Wholesale",
-    image: "/avhats.png",
-    result: "More dealer and B2B inquiries",
+    id: "9",
+    name: "BD Irrigation",
+    url: "https://bdirrigation.com",
+    description:
+      "BD Irrigation is a professional irrigation company—think sprinkler and drip installs, system tune-ups, and seasonal service for homes and commercial properties. Their site lays out what they do, where they work, and how to reach them for a quote.",
+    category: "Irrigation",
+    image: "/BDI%20Full%20logo.svg",
   },
 ];

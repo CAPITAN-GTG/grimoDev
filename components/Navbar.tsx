@@ -19,11 +19,10 @@ const Navbar = () => {
 
   const navItems = [
     { name: 'HOME', href: '#home' },
+    { name: 'WEBSITES', href: '#websites' },
+    { name: 'ADS', href: '#ads' },
+    { name: 'SOCIAL', href: '#social' },
     { name: 'PROJECTS', href: '#projects' },
-    { name: 'STANDALONE', href: '#standalone' },
-    { name: 'PRICING', href: '#pricing' },
-    { name: 'FAQ', href: '#faq' },
-    { name: 'SERVICES', href: '#services' },
     { name: 'CONTACT', href: '#contact' },
   ];
 
