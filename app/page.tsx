@@ -1,6 +1,7 @@
 "use client";
 
-import { useState, useEffect, useRef, type ReactNode } from "react";
+import { useState, useEffect, useRef, useMemo, type ReactNode } from "react";
+import AutoScroll from "embla-carousel-auto-scroll";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
 import { Mail, CheckCircle, Globe, ExternalLink, Megaphone, Share2, Tv, Users } from "lucide-react";
@@ -88,6 +89,23 @@ export default function Home() {
   const [projectsApi, setProjectsApi] = useState<CarouselApi>();
   const [projectsCurrent, setProjectsCurrent] = useState(0);
   const [projectsCount, setProjectsCount] = useState(0);
+  const projectsAutoScrollPlugin = useMemo(
+    () =>
+      AutoScroll({
+        speed: 1,
+        startDelay: 0,
+        playOnInit: true,
+        stopOnMouseEnter: true,
+        stopOnInteraction: false,
+        stopOnFocusIn: false,
+        rootNode: (emblaRoot) => emblaRoot.parentElement,
+      }),
+    []
+  );
+  const projectsCarouselPlugins = useMemo(
+    () => [projectsAutoScrollPlugin],
+    [projectsAutoScrollPlugin]
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
 
@@ -409,6 +427,14 @@ export default function Home() {
       setProjectsCurrent(projectsApi.selectedScrollSnap() + 1);
     });
   }, [projectsApi]);
+
+  useEffect(() => {
+    if (!projectsSectionRef.current) return;
+    const navButtons = projectsSectionRef.current.querySelectorAll("[data-projects-nav]");
+    const onNavClick = () => projectsAutoScrollPlugin.reset();
+    navButtons.forEach((btn) => btn.addEventListener("click", onNavClick));
+    return () => navButtons.forEach((btn) => btn.removeEventListener("click", onNavClick));
+  }, [projectsAutoScrollPlugin]);
 
   const handleFormSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -813,6 +839,7 @@ export default function Home() {
           <div className="relative px-4 sm:px-6 md:px-8 lg:px-16 xl:px-20 2xl:px-24">
             <Carousel
               opts={{ align: "start", loop: true }}
+              plugins={projectsCarouselPlugins}
               className="w-full"
               setApi={setProjectsApi}
               aria-label="Projects showcase carousel"
@@ -872,10 +899,22 @@ export default function Home() {
                   </CarouselItem>
                 ))}
               </CarouselContent>
-              <CarouselPrevious className="hidden lg:flex -left-12 xl:-left-16 2xl:-left-20 w-12 h-12 xl:w-14 xl:h-14 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none" />
-              <CarouselNext className="hidden lg:flex -right-12 xl:-right-16 2xl:-right-20 w-12 h-12 xl:w-14 xl:h-14 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none" />
-              <CarouselPrevious className="hidden sm:flex lg:hidden -left-6 md:-left-8 w-10 h-10 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none" />
-              <CarouselNext className="hidden sm:flex lg:hidden -right-6 md:-right-8 w-10 h-10 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none" />
+              <CarouselPrevious
+                data-projects-nav
+                className="hidden lg:flex -left-12 xl:-left-16 2xl:-left-20 w-12 h-12 xl:w-14 xl:h-14 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none"
+              />
+              <CarouselNext
+                data-projects-nav
+                className="hidden lg:flex -right-12 xl:-right-16 2xl:-right-20 w-12 h-12 xl:w-14 xl:h-14 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none"
+              />
+              <CarouselPrevious
+                data-projects-nav
+                className="hidden sm:flex lg:hidden -left-6 md:-left-8 w-10 h-10 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none"
+              />
+              <CarouselNext
+                data-projects-nav
+                className="hidden sm:flex lg:hidden -right-6 md:-right-8 w-10 h-10 bg-white/5 backdrop-blur-sm hover:bg-white/15 hover:text-yellow-200 text-white border border-white/10 hover:border-white/30 transition-all duration-300 !rounded-none"
+              />
             </Carousel>
 
             <div className="sm:hidden mt-8">

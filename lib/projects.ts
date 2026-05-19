@@ -11,6 +11,16 @@ export interface Project {
 
 export const projects: Project[] = [
   {
+    id: "10",
+    name: "Cobra Sewer & Drain",
+    url: "https://www.cobrasewerndrain.com/",
+    description:
+      "Licensed plumbing company site for residential, commercial, and emergency service across the San Fernando Valley, LA, Orange, and Ventura counties — with bilingual support and clear quote flows.",
+    category: "Plumbing",
+    image: "/cobra-plumbing.webp",
+    result: "24/7 emergency visibility and more quote requests",
+  },
+  {
     id: "1",
     name: "Yatusabe Studio",
     url: "https://yatusabesstudio.net/",
