@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, useMemo, type ReactNode } from "react";
+import { useRouter } from "next/navigation";
 import AutoScroll from "embla-carousel-auto-scroll";
 import Image from "next/image";
 import { HeroHighlight, Highlight } from "@/components/ui/hero-highlight";
@@ -108,6 +109,7 @@ export default function Home() {
   );
   const [isSubmitting, setIsSubmitting] = useState(false);
   const formRef = useRef<HTMLFormElement>(null);
+  const router = useRouter();
 
   const heroRef = useRef<HTMLElement>(null);
   const heroTitleRef = useRef<HTMLHeadingElement>(null);
@@ -458,16 +460,9 @@ export default function Home() {
       });
 
       if (response.ok) {
-        toast.success("Message sent. We will get back to you soon.", {
-          style: {
-            background: "#fef3c7",
-            color: "#000000",
-            border: "1px solid #000000",
-            borderRadius: "8px",
-            fontFamily: "Outfit, sans-serif",
-          },
-        });
         formRef.current?.reset();
+        router.push("/success");
+        return;
       } else {
         const errorData = await response.json();
         throw new Error(errorData.error || "Failed to send message");

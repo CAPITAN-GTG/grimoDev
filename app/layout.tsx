@@ -1,9 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import NavigationSlider from "@/components/NavigationSlider";
-import MobileNavbar from "@/components/MobileNavbar";
-import Footer from "@/components/Footer";
-import StickyCta from "@/components/StickyCta";
+import SiteChrome from "@/components/SiteChrome";
 
 export const metadata: Metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://grimodev.com'),
@@ -54,11 +51,7 @@ export default function RootLayout({
         <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cormorant+Unicase:wght@300;400;500;600;700&family=Outfit:wght@100..900&display=swap" rel="stylesheet" />
       </head>
       <body className="antialiased" suppressHydrationWarning>
-        <StickyCta />
-        <NavigationSlider />
-        <MobileNavbar />
-        {children}
-        <Footer />
+        <SiteChrome>{children}</SiteChrome>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{
