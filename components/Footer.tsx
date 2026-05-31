@@ -1,6 +1,3 @@
-import Link from "next/link";
-import { Mail } from "lucide-react";
-
 const Footer = () => {
   const currentYear = new Date().getFullYear();
 
@@ -17,15 +14,6 @@ const Footer = () => {
             />
             <h3 className="text-xl font-heading text-white tracking-tight">GRIMO DEV</h3>
           </div>
-
-          {/* Prominent CTA */}
-          <Link
-            href="#contact"
-            className="inline-flex items-center gap-2 bg-yellow-100 text-black px-6 py-4 font-semibold text-sm tracking-widest uppercase transition-all duration-200 hover:bg-yellow-200 mb-8"
-          >
-            <Mail className="w-5 h-5" />
-            Reach out
-          </Link>
 
           {/* Copyright */}
           <div className="border-t border-gray-800 pt-8">

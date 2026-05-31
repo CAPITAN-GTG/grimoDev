@@ -522,8 +522,8 @@ export default function Home() {
               ref={heroDescriptionRef}
               className="text-sm sm:text-base md:text-lg lg:text-xl xl:text-2xl mb-6 sm:mb-8 md:mb-10 lg:mb-12 max-w-4xl mx-auto text-gray-700 leading-relaxed font-normal tracking-wide px-4 sm:px-6 text-center"
             >
-              Bold builds and ongoing growth: custom sites, Meta and Google campaigns, and
-              social content on a schedule that fits your budget.
+              You don&apos;t have time to do all your marketing as a business owner. Let us
+              handle that for you.
             </p>
             <div
               ref={heroButtonRef}
