@@ -21,13 +21,14 @@ export const projects: Project[] = [
     result: "24/7 emergency visibility and more quote requests",
   },
   {
-    id: "1",
-    name: "Yatusabe Studio",
-    url: "https://yatusabesstudio.net/",
-    description: "Creative studio portfolio showcasing artistic work and services",
-    category: "Studio",
-    image: "/yatusabesstudio.webp",
-    result: "Increased booking rates",
+    id: "11",
+    name: "LA Tech Repairs",
+    url: "https://www.latechcenter.com/",
+    description:
+      "Neighborhood electronics repair site for phones, tablets, computers, and consoles in Tarzana — with on-call IT, buy/sell/trade-in, and clear service paths.",
+    category: "Tech Repair",
+    image: "/la-tech.webp",
+    result: "Stronger local visibility and more repair bookings",
   },
   {
     id: "2",
@@ -64,15 +65,6 @@ export const projects: Project[] = [
     category: "Home Services",
     image: "/handyman-services.webp",
     result: "More job requests from local search",
-  },
-  {
-    id: "6",
-    name: "TeestoGo",
-    url: "https://www.teestogo.com/",
-    description: "Custom t-shirt printing service with design tools and order management",
-    category: "Screen Printing",
-    image: "/teestogo.webp",
-    result: "More custom orders and quote requests",
   },
   {
     id: "7",
